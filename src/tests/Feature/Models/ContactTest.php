@@ -50,7 +50,7 @@ class ContactTest extends TestCase
     public static function normalParams(): array
     {
         return [
-            'category_id' => Category::create(['content' => fake()->text()])->id,
+            'category_id' => Category::create(['content' => 'aaa'])->id,
             'first_name' => 'foo',
             'last_name' => 'bar',
             'gender' => 1,
