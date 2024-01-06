@@ -1,0 +1,35 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Models;
+
+use App\Models\Category;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class CategoryTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * @testdox 作成可能なケース
+     * @testWith ["foo"]
+     */
+    public function test_can_create(string $content): void
+    {
+        $category = Category::create(compact('content'));
+        $this->assertNotNull($category);
+    }
+
+    /**
+     * @testdox 必要なカラムが不足しているケース
+     * @testWith [null]
+     */
+    public function test_cannot_create(?string $content): void
+    {
+        $this->assertThrows(function () use ($content) {
+            Category::create(compact('content'));
+        });
+    }
+}
