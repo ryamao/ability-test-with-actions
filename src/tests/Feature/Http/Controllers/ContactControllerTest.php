@@ -44,7 +44,42 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で入力必須項目が足りないケース
+     * @testdox 「GET `/confirm`」がステータスコード405を返す
+     * @group confirm
+     */
+    public function test_http_get_confirm_returns_405(): void
+    {
+        $response = $this->get('/confirm');
+        $response->assertStatus(405);
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で入力必須項目が足りているケース
+     * @group confirm
+     */
+    public function test_http_post_confirm_is_success_when_parameters_are_filled(): void
+    {
+        $data = ContactTest::normalParams();
+        $response = $this->post('/confirm', $data);
+        $response->assertViewIs('confirm');
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で
+     * @group confirm
+     */
+    public function test_http_post_confirm_is_success_when_building_is_missing(): void
+    {
+        $data = ContactTest::normalParams();
+        $data['building'] = null;
+        $response = $this->post('/confirm', $data);
+        $response->assertViewIs('confirm');
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で入力必須項目 $paramName が足りないケース
      * @group confirm
      * @testWith ["last_name", "姓を入力してください"]
      *           ["first_name", "名を入力してください"]
@@ -82,7 +117,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で電話番号の形式ば間違っているケース
+     * @testdox 「POST `/confirm`」で電話番号の形式が間違っているケース ($areaCode-$cityCode-$subscriberCode)
      * @group confirm
      * @testWith ["aaa", "1234", "5789", "area_code"]
      *           ["080123", "1234", "5789", "area_code"]
