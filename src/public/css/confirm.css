@@ -1,0 +1,92 @@
+body {
+    font-family: "Inika", sans-serif;
+    color: #8b7969;
+}
+
+input,
+textarea {
+    font-family: inherit;
+    color: inherit;
+}
+
+button {
+    border: none;
+    font-size: 1em;
+}
+
+.display-none {
+    display: none;
+}
+
+.header {
+    color: #8b7969;
+    border-bottom: 1px solid #e0dfde;
+}
+
+.header__title {
+    text-align: center;
+    font-weight: normal;
+    margin: 0.6em 0;
+}
+
+.confirm {
+    width: 750px;
+    margin: 0 auto;
+}
+
+.confirm__title {
+    text-align: center;
+    font-weight: normal;
+    font-size: 1.7rem;
+    margin: 1.3em 0;
+}
+
+.confirm__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.confirm__row {
+    border: 1px solid #e0dfde;
+    height: 3.3em;
+}
+
+.confirm__row-header {
+    background-color: #baa899;
+    color: #fff;
+    font-weight: normal;
+    text-align: left;
+    padding-left: 2.6em;
+}
+
+.confirm__row-data {
+    padding-left: 2em;
+}
+
+.confirm__button-group {
+    width: 20em;
+    margin: 2.5em auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.confirm__submit-button {
+    grid-column: 2;
+}
+
+.confirm__submit-button button {
+    background-color: #82756a;
+    color: #fff;
+    padding: 0.3em 2em;
+}
+
+.confirm__edit-button {
+    grid-column: 3;
+}
+
+.confirm__edit-button button {
+    background-color: transparent;
+    color: #8b7969;
+    text-decoration: underline;
+}
