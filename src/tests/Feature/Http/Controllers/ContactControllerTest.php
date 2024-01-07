@@ -357,7 +357,7 @@ class ContactControllerTest extends TestCase
         $this->assertEquals($data['last_name'], $contact->last_name);
         $this->assertEquals($data['gender'], $contact->gender);
         $this->assertEquals($data['email'], $contact->email);
-        $this->assertEquals($data['tel'], $contact->tel);
+        $this->assertEquals($data['area_code'] . $data['city_code'] . $data['subscriber_code'], $contact->tel);
         $this->assertEquals($data['address'], $contact->address);
         $this->assertEquals($data['building'], $contact->building);
         $this->assertEquals($data['detail'], $contact->detail);
@@ -417,7 +417,7 @@ class ContactControllerTest extends TestCase
         $this->assertEquals($data['last_name'], $contact->last_name);
         $this->assertEquals($data['gender'], $contact->gender);
         $this->assertEquals($data['email'], $contact->email);
-        $this->assertEquals($data['tel'], $contact->tel);
+        $this->assertEquals($data['area_code'] . $data['city_code'] . $data['subscriber_code'], $contact->tel);
         $this->assertEquals($data['address'], $contact->address);
         $this->assertEquals($data['building'], $contact->building);
         $this->assertEquals($data['detail'], $contact->detail);

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactRequest;
 use App\Models\Category;
+use App\Models\Contact;
 use Illuminate\View\View;
 
 class ContactController extends Controller
@@ -36,5 +37,28 @@ class ContactController extends Controller
         $validated['category_content'] = Category::find($validated['category_id'])->content;
 
         return view('confirm', $validated);
+    }
+
+    public function store(ContactRequest $request): View
+    {
+        $data = $request->only([
+            'category_id',
+            'first_name',
+            'last_name',
+            'gender',
+            'email',
+            'address',
+            'building',
+            'detail',
+        ]);
+
+        $data['tel'] = '';
+        foreach ($request->only(['area_code', 'city_code', 'subscriber_code']) as $key => $code) {
+            $data['tel'] .= $code;
+        }
+
+        Contact::create($data);
+
+        return view('thanks');
     }
 }
