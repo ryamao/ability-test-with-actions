@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Models\ContactTest;
 use Tests\TestCase;
@@ -14,7 +15,7 @@ class ContactControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @testdox 「GET `/`」がステータスコード200を返す
+     * @testdox [GET /] ステータスコード200
      * @group index
      */
     public function test_http_get_index_returns_200(): void
@@ -24,7 +25,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「GET `/`」で `view('index')` が表示される
+     * @testdox [GET /] view('index') を表示
      * @group index
      */
     public function test_http_get_index_renders_index_view(): void
@@ -34,7 +35,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「GET `/`」で検証エラー無し
+     * @testdox [GET /] 検証エラー無し
      * @group index
      */
     public function test_http_get_index_is_valid(): void
@@ -44,7 +45,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「GET `/confirm`」がステータスコード405を返す
+     * @testdox [GET /confirm] ステータスコード405
      * @group confirm
      */
     public function test_http_get_confirm_returns_405(): void
@@ -54,7 +55,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で入力必須項目が足りている場合、ステータスコード200を返す
+     * @testdox [POST /confirm] すべての項目が入力されている場合、ステータスコード200
      * @group confirm
      */
     public function test_http_post_confirm_returns_200_when_parameters_are_filled(): void
@@ -65,7 +66,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で入力必須項目が足りている場合、`view('confirm')` が表示される
+     * @testdox [POST /confirm] すべての項目が入力されている場合、view('confirm') を表示
      * @group confirm
      */
     public function test_http_post_confirm_renders_confirm_view_when_parameters_are_filled(): void
@@ -76,7 +77,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で入力必須項目が足りている場合、検証エラーが無い
+     * @testdox [POST /confirm] すべての項目が入力されている場合、検証エラー無し
      * @group confirm
      */
     public function test_http_post_confirm_is_valid_when_parameters_are_filled(): void
@@ -87,7 +88,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で建物名だけ入力されていない場合、ステータスコード200を返す
+     * @testdox [POST /confirm] 建物名だけ入力されていない場合、ステータスコード200
      * @group confirm
      */
     public function test_http_post_confirm_returns_200_when_building_is_missing(): void
@@ -99,7 +100,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で建物名だけ入力されていない場合、`view('confirm')` が表示される
+     * @testdox [POST /confirm] 建物名だけ入力されていない場合、view('confirm') を表示
      * @group confirm
      */
     public function test_http_post_confirm_renders_confirm_view_when_building_is_missing(): void
@@ -111,7 +112,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で建物名だけ入力されていない場合、検証エラーが無い
+     * @testdox [POST /confirm] 建物名だけ入力されていない場合、検証エラー無し
      * @group confirm
      */
     public function test_http_post_confirm_is_valid_when_building_is_missing(): void
@@ -123,7 +124,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で入力必須項目 $paramName が足りないケース
+     * @testdox [POST /confirm] 入力必須項目 $paramName が足りないケース
      * @group confirm
      * @testWith ["last_name", "姓を入力してください"]
      *           ["first_name", "名を入力してください"]
@@ -148,7 +149,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」でメールアドレスの形式が間違っているケース
+     * @testdox [POST /confirm] メールアドレスの形式が間違っているケース
      * @group confirm
      */
     public function test_http_post_confirm_sends_error_when_email_format_is_incorrect(): void
@@ -161,7 +162,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で電話番号の形式が間違っているケース ($areaCode-$cityCode-$subscriberCode)
+     * @testdox [POST /confirm] 電話番号の形式が間違っているケース ($areaCode-$cityCode-$subscriberCode)
      * @group confirm
      * @testWith ["aaa", "1234", "5789", "area_code"]
      *           ["080123", "1234", "5789", "area_code"]
@@ -186,7 +187,7 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」でお問い合わせ内容が120文字より長いケース
+     * @testdox [POST /confirm] お問い合わせ内容が120文字より長いケース
      * @group confirm
      */
     public function test_http_post_confirm_sends_error_when_detail_is_too_long(): void
@@ -196,6 +197,230 @@ class ContactControllerTest extends TestCase
         $response = $this->post('/confirm', $data);
         $response->assertRedirect('/');
         $response->assertInvalid(['detail' => 'お問合せ内容は120文字以内で入力してください']);
+    }
+
+    /**
+     * @testdox [GET /thanks] ステータスコード405
+     * @group thanks
+     */
+    public function test_http_get_thanks_returns_405(): void
+    {
+        $response = $this->get('/thanks');
+        $response->assertStatus(405);
+    }
+
+    /**
+     * @testdox [POST /thanks] リクエストパラメータが無い場合、検証エラー有り
+     * @group thanks
+     */
+    public function test_http_post_thanks_is_invalid_when_params_are_empty(): void
+    {
+        $response = $this->post('/thanks');
+        $response->assertInvalid();
+    }
+
+    /**
+     * @testdox [POST /thanks] リクエストパラメータが無い場合、`/` へリダイレクト
+     * @group thanks
+     */
+    public function test_http_post_thanks_redirects_to_index_when_params_are_empty(): void
+    {
+        $response = $this->post('/thanks');
+        $response->assertRedirect('/');
+    }
+
+    /**
+     * @testdox [POST /thanks] リクエストパラメータが無い場合、`contacts` テーブルに変化無し
+     * @group thanks
+     */
+    public function test_http_post_thanks_does_nothing_to_contacts_when_params_are_empty(): void
+    {
+        $this->assertDatabaseEmpty('contacts');
+        $this->post('/thanks');
+        $this->assertDatabaseEmpty('contacts');
+    }
+
+    /**
+     * @testdox [POST /thanks] 入力必須項目 $paramName が足りない場合、検証エラー有り
+     * @group thanks
+     * @testWith ["last_name", "姓を入力してください"]
+     *           ["first_name", "名を入力してください"]
+     *           ["gender", "性別を選択してください"]
+     *           ["email", "メールアドレスを入力してください"]
+     *           ["area_code", "電話番号を入力してください"]
+     *           ["city_code", "電話番号を入力してください"]
+     *           ["subscriber_code", "電話番号を入力してください"]
+     *           ["address", "住所を入力してください"]
+     *           ["category_id", "お問い合わせの種類を選択してください"]
+     *           ["detail", "お問い合わせ内容を入力してください"]
+     */
+    public function test_http_post_thanks_is_invalid_when_required_param_is_missing(string $paramName): void
+    {
+        $data = self::normalFormData();
+        $data[$paramName] = null;
+        $response = $this->post('/thanks', $data);
+        $response->assertInvalid($paramName);
+    }
+
+    /**
+     * @testdox [POST /thanks] 入力必須項目 $paramName が足りない場合、`/` へリダイレクト
+     * @group thanks
+     * @testWith ["last_name", "姓を入力してください"]
+     *           ["first_name", "名を入力してください"]
+     *           ["gender", "性別を選択してください"]
+     *           ["email", "メールアドレスを入力してください"]
+     *           ["area_code", "電話番号を入力してください"]
+     *           ["city_code", "電話番号を入力してください"]
+     *           ["subscriber_code", "電話番号を入力してください"]
+     *           ["address", "住所を入力してください"]
+     *           ["category_id", "お問い合わせの種類を選択してください"]
+     *           ["detail", "お問い合わせ内容を入力してください"]
+     */
+    public function test_http_post_thanks_redirects_to_index_when_required_param_is_missing(string $paramName): void
+    {
+        $data = self::normalFormData();
+        $data[$paramName] = null;
+        $response = $this->post('/thanks', $data);
+        $response->assertRedirect('/');
+    }
+
+    /**
+     * @testdox [POST /thanks] 入力必須項目 $paramName が足りない場合、`contacts` テーブルに変化無し
+     * @group thanks
+     * @testWith ["last_name", "姓を入力してください"]
+     *           ["first_name", "名を入力してください"]
+     *           ["gender", "性別を選択してください"]
+     *           ["email", "メールアドレスを入力してください"]
+     *           ["area_code", "電話番号を入力してください"]
+     *           ["city_code", "電話番号を入力してください"]
+     *           ["subscriber_code", "電話番号を入力してください"]
+     *           ["address", "住所を入力してください"]
+     *           ["category_id", "お問い合わせの種類を選択してください"]
+     *           ["detail", "お問い合わせ内容を入力してください"]
+     */
+    public function test_http_post_thanks_does_nothing_to_contacts_when_required_param_is_missing(string $paramName): void
+    {
+        $this->assertDatabaseEmpty('contacts');
+        $data = self::normalFormData();
+        $data[$paramName] = null;
+        $this->post('/thanks', $data);
+        $this->assertDatabaseEmpty('contacts');
+    }
+
+    /**
+     * @testdox [POST /thanks] すべての項目が入力されている場合、ステータスコード200
+     * @group thanks
+     */
+    public function test_http_post_thanks_returns_200_when_parameters_are_filled(): void
+    {
+        $data = self::normalFormData();
+        $response = $this->post('/thanks', $data);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @testdox [POST /thanks] すべての項目が入力されている場合、view('thanks') を表示
+     * @group thanks
+     */
+    public function test_http_post_thanks_renders_thanks_when_parameters_are_filled(): void
+    {
+        $data = self::normalFormData();
+        $response = $this->post('/thanks', $data);
+        $response->assertViewIs('thanks');
+    }
+
+    /**
+     * @testdox [POST /thanks] すべての項目が入力されている場合、検証エラー無し
+     * @group thanks
+     */
+    public function test_http_post_thanks_is_valid_when_parameters_are_filled(): void
+    {
+        $data = self::normalFormData();
+        $response = $this->post('/thanks', $data);
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox [POST /thanks] すべての項目が入力されている場合、`contacts` テーブルに保存
+     * @group thanks
+     */
+    public function test_http_post_thanks_stores_to_contacts_when_parameters_are_filled(): void
+    {
+        $this->assertDatabaseEmpty('contacts');
+        $data = self::normalFormData();
+        $response = $this->post('/thanks', $data);
+        $response->assertValid();
+        $this->assertDatabaseCount('contacts', 1);
+        $contact = Contact::first();
+        $this->assertEquals($data['category_id'], $contact->category_id);
+        $this->assertEquals($data['first_name'], $contact->first_name);
+        $this->assertEquals($data['last_name'], $contact->last_name);
+        $this->assertEquals($data['gender'], $contact->gender);
+        $this->assertEquals($data['email'], $contact->email);
+        $this->assertEquals($data['tel'], $contact->tel);
+        $this->assertEquals($data['address'], $contact->address);
+        $this->assertEquals($data['building'], $contact->building);
+        $this->assertEquals($data['detail'], $contact->detail);
+    }
+
+    /**
+     * @testdox [POST /thanks] 建物名だけ入力されていない場合、ステータスコード200
+     * @group thanks
+     */
+    public function test_http_post_thanks_returns_200_when_building_is_missing(): void
+    {
+        $data = self::normalFormData();
+        $data['building'] = null;
+        $response = $this->post('/thanks', $data);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @testdox [POST /thanks] 建物名だけ入力されていない場合、view('thanks') を表示
+     * @group thanks
+     */
+    public function test_http_post_thanks_renders_thanks_when_building_is_missing(): void
+    {
+        $data = self::normalFormData();
+        $data['building'] = null;
+        $response = $this->post('/thanks', $data);
+        $response->assertViewIs('thanks');
+    }
+
+    /**
+     * @testdox [POST /thanks] 建物名だけ入力されていない場合、検証エラー無し
+     * @group thanks
+     */
+    public function test_http_post_thanks_is_valid_when_building_is_missing(): void
+    {
+        $data = self::normalFormData();
+        $data['building'] = null;
+        $response = $this->post('/thanks', $data);
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox [POST /thanks] 建物名だけ入力されていない場合、`contacts` テーブルに保存
+     * @group thanks
+     */
+    public function test_http_post_thanks_stores_to_contacts_when_building_is_missing(): void
+    {
+        $this->assertDatabaseEmpty('contacts');
+        $data = self::normalFormData();
+        $data['building'] = null;
+        $response = $this->post('/thanks', $data);
+        $response->assertValid();
+        $this->assertDatabaseCount('contacts', 1);
+        $contact = Contact::first();
+        $this->assertEquals($data['category_id'], $contact->category_id);
+        $this->assertEquals($data['first_name'], $contact->first_name);
+        $this->assertEquals($data['last_name'], $contact->last_name);
+        $this->assertEquals($data['gender'], $contact->gender);
+        $this->assertEquals($data['email'], $contact->email);
+        $this->assertEquals($data['tel'], $contact->tel);
+        $this->assertEquals($data['address'], $contact->address);
+        $this->assertEquals($data['building'], $contact->building);
+        $this->assertEquals($data['detail'], $contact->detail);
     }
 
     public function normalFormData(): array
