@@ -15,26 +15,27 @@ class UserTest extends TestCase
     /**
      * @testdox 作成可能なケース
      * @group model
-     * @testWith ["foo", "test@example.com", "qwerty"]
      */
-    public function tes_can_create(string $name, string $email, string $password): void
+    public function tes_can_create(): void
     {
-        $user = User::create(compact('name', 'email', 'password'));
+        $data = self::normalData();
+        $user = User::create($data);
         $this->assertNotNull($user);
     }
 
     /**
-     * @testdox 必要なカラムが不足しているケース
+     * @testdox 必要なカラム $column が不足しているケース
      * @group model
-     * @testWith [null, "test@example.com", "qwerty"]
-     *           ["foo", null, "qwerty"]
-     *           ["foo", "test@example.com", null]
+     * @testWith ["name"]
+     *           ["email"]
+     *           ["password"]
      */
-    public function test_cannot_create(?string $name, ?string $email, ?string $password): void
+    public function test_cannot_create(string $column): void
     {
-        $params = compact('name', 'email', 'password');
-        $this->assertThrows(function () use ($params) {
-            User::create($params);
+        $data = self::normalData();
+        unset($data[$column]);
+        $this->assertThrows(function () use ($data) {
+            User::create($data);
         });
     }
 
@@ -49,6 +50,15 @@ class UserTest extends TestCase
         $this->assertThrows(function () use ($params) {
             User::create($params);
         });
+    }
+
+    public static function normalData(): array
+    {
+        return [
+            'name' => 'foo',
+            'email' => 'test@example.com',
+            'password' => 'qwerty',
+        ];
     }
 
     public static function tooLongNameProvider(): array

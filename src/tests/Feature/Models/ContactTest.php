@@ -15,22 +15,32 @@ class ContactTest extends TestCase
 
     /**
      * @testdox 作成可能なケース
-     * @testWith [null]
-     *           ["category_id"]
-     *           ["building"]
+     * @group model
      */
-    public function test_can_create(?string $column): void
+    public function test_can_create(): void
     {
         $params = self::normalParams();
-        if (!is_null($column)) {
-            $params[$column] = null;
-        }
         $contact = Contact::create($params);
         $this->assertNotNull($contact);
     }
 
     /**
-     * @testdox 必要なカラムが不足しているケース
+     * @testdox 必須でないカラム $column が指定されていないケース
+     * @group model
+     * @testWith ["category_id"]
+     *           ["building"]
+     */
+    public function test_can_create_when_non_required_column_is_missing(string $column): void
+    {
+        $params = self::normalParams();
+        unset($params[$column]);
+        $contact = Contact::create($params);
+        $this->assertNotNull($contact);
+    }
+
+    /**
+     * @testdox 必要なカラム $column が指定されていないケース
+     * @group model
      * @testWith ["first_name"]
      *           ["last_name"]
      *           ["email"]
@@ -38,10 +48,10 @@ class ContactTest extends TestCase
      *           ["address"]
      *           ["detail"]
      */
-    public function test_cannot_create(string $column): void
+    public function test_cannot_create_when_required_column_is_missing(string $column): void
     {
         $params = self::normalParams();
-        $params[$column] = null;
+        unset($params[$column]);
         $this->assertThrows(function () use ($params) {
             Contact::create($params);
         });

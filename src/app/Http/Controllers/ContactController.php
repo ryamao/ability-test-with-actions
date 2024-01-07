@@ -16,9 +16,25 @@ class ContactController extends Controller
         return view('index', compact('categories'));
     }
 
+    public function revise(ContactRequest $request): View
+    {
+        $params = $request->validated();
+        $params['categories'] = Category::all();
+        return view('index', $params);
+    }
+
     public function confirm(ContactRequest $request): View
     {
-        dd($request->validated());
-        return view('confirm', $request->validated());
+        $validated = $request->validated();
+
+        $validated['gender_name'] = match ((int) $validated['gender']) {
+            1 => '男性',
+            2 => '女性',
+            3 => 'その他',
+        };
+
+        $validated['category_content'] = Category::find($validated['category_id'])->content;
+
+        return view('confirm', $validated);
     }
 }

@@ -54,27 +54,71 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox 「POST `/confirm`」で入力必須項目が足りているケース
+     * @testdox 「POST `/confirm`」で入力必須項目が足りている場合、ステータスコード200を返す
      * @group confirm
      */
-    public function test_http_post_confirm_is_success_when_parameters_are_filled(): void
+    public function test_http_post_confirm_returns_200_when_parameters_are_filled(): void
     {
-        $data = ContactTest::normalParams();
+        $data = self::normalFormData();
+        $response = $this->post('/confirm', $data);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で入力必須項目が足りている場合、`view('confirm')` が表示される
+     * @group confirm
+     */
+    public function test_http_post_confirm_renders_confirm_view_when_parameters_are_filled(): void
+    {
+        $data = self::normalFormData();
         $response = $this->post('/confirm', $data);
         $response->assertViewIs('confirm');
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で入力必須項目が足りている場合、検証エラーが無い
+     * @group confirm
+     */
+    public function test_http_post_confirm_is_valid_when_parameters_are_filled(): void
+    {
+        $data = self::normalFormData();
+        $response = $this->post('/confirm', $data);
         $response->assertValid();
     }
 
     /**
-     * @testdox 「POST `/confirm`」で
+     * @testdox 「POST `/confirm`」で建物名だけ入力されていない場合、ステータスコード200を返す
      * @group confirm
      */
-    public function test_http_post_confirm_is_success_when_building_is_missing(): void
+    public function test_http_post_confirm_returns_200_when_building_is_missing(): void
     {
-        $data = ContactTest::normalParams();
+        $data = self::normalFormData();
+        $data['building'] = null;
+        $response = $this->post('/confirm', $data);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で建物名だけ入力されていない場合、`view('confirm')` が表示される
+     * @group confirm
+     */
+    public function test_http_post_confirm_renders_confirm_view_when_building_is_missing(): void
+    {
+        $data = self::normalFormData();
         $data['building'] = null;
         $response = $this->post('/confirm', $data);
         $response->assertViewIs('confirm');
+    }
+
+    /**
+     * @testdox 「POST `/confirm`」で建物名だけ入力されていない場合、検証エラーが無い
+     * @group confirm
+     */
+    public function test_http_post_confirm_is_valid_when_building_is_missing(): void
+    {
+        $data = self::normalFormData();
+        $data['building'] = null;
+        $response = $this->post('/confirm', $data);
         $response->assertValid();
     }
 
@@ -109,7 +153,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_sends_error_when_email_format_is_incorrect(): void
     {
-        $data = ContactTest::normalParams();
+        $data = self::normalFormData();
         $data['email'] = 'test';
         $response = $this->post('/confirm', $data);
         $response->assertRedirect('/');
@@ -132,7 +176,7 @@ class ContactControllerTest extends TestCase
         string $subscriberCode,
         string $incorrectParamName,
     ): void {
-        $data = ContactTest::normalParams();
+        $data = self::normalFormData();
         $data['area_code'] = $areaCode;
         $data['city_code'] = $cityCode;
         $data['subscriber_code'] = $subscriberCode;
@@ -147,7 +191,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_sends_error_when_detail_is_too_long(): void
     {
-        $data = ContactTest::normalParams();
+        $data = self::normalFormData();
         $data['detail'] = str_repeat('A', 121);
         $response = $this->post('/confirm', $data);
         $response->assertRedirect('/');

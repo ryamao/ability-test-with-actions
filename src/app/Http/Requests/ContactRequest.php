@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ContactRequest extends FormRequest
 {
+    protected $redirect = '/';
+
     /**
      * Determine if the user is authorized to make this request.
      */

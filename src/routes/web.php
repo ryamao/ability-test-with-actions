@@ -15,9 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [ContactController::class, 'index']);
+Route::post('/', [ContactController::class, 'revise']);
 Route::post('/confirm', [ContactController::class, 'confirm']);
-
-// FIXME 動作確認用
-Route::get('/confirm', function () {
-    return view('confirm');
-});
