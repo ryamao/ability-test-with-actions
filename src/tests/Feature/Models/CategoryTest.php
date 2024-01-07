@@ -14,6 +14,7 @@ class CategoryTest extends TestCase
 
     /**
      * @testdox 作成可能なケース
+     * @group model
      * @testWith ["foo"]
      */
     public function test_can_create(string $content): void
@@ -24,12 +25,12 @@ class CategoryTest extends TestCase
 
     /**
      * @testdox 必要なカラムが不足しているケース
-     * @testWith [null]
+     * @group model
      */
-    public function test_cannot_create(?string $content): void
+    public function test_cannot_create_when_required_column_is_missing(): void
     {
-        $this->assertThrows(function () use ($content) {
-            Category::create(compact('content'));
+        $this->assertThrows(function () {
+            Category::create([]);
         });
     }
 }

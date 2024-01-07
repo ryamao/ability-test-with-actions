@@ -1,0 +1,164 @@
+body {
+    font-family: "Inika", sans-serif;
+}
+
+input,
+textarea {
+    font-family: inherit;
+}
+
+.header {
+    color: #8b7969;
+    border-bottom: 1px solid #e0dfde;
+}
+
+.header__title {
+    text-align: center;
+    font-weight: normal;
+}
+
+.contact {
+    color: #8b7969;
+}
+
+.contact__title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 40px 0;
+}
+
+.form__inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.form__group {
+    display: grid;
+    grid-template-columns: 1fr 550px;
+}
+
+.form__gender-group {
+    align-items: baseline;
+}
+
+.form__text {
+    margin: 0;
+    padding-top: 5px;
+}
+
+.form__text--required::after {
+    content: "※";
+    color: #ff9494;
+    margin-left: 4px;
+}
+
+.form__input-unit {
+    min-height: 60px;
+}
+
+.form__name-unit {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10%;
+}
+
+.form__gender-unit {
+    min-height: 50px;
+}
+
+.form__detail-unit {
+    height: 150px;
+}
+
+.form__gender-list {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.form__gender-list > * + * {
+    margin-left: 40px;
+}
+
+.form__gender-item {
+    display: flex;
+    align-items: center;
+}
+
+.form__gender {
+    appearance: none;
+    border: 1px solid #8b7969;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    margin: 0 8px;
+}
+
+.form__gender:checked {
+    background: #8b7969;
+}
+
+.form__tel-unit {
+    display: grid;
+    grid-template-columns: 1fr 20px 1fr 20px 1fr;
+    column-gap: 10px;
+    align-items: baseline;
+}
+
+.form__tel-hyphen,
+.form__tel {
+    text-align: center;
+}
+
+.form input::placeholder,
+.form textarea::placeholder {
+    color: #8b7969;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="tel"],
+.form select,
+.form textarea {
+    background-color: #f4f4f4;
+    border: none;
+    padding: 8px 20px;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="tel"],
+.form textarea {
+    width: 100%;
+}
+
+.form__category {
+    color: #ff9494;
+    width: 50%;
+    appearance: none;
+}
+
+.form__detail {
+    height: 120px;
+    resize: none;
+}
+
+.form__validation-alert {
+    font-size: 0.7rem;
+}
+
+.form__button {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.form__button button {
+    background-color: #8b7969;
+    color: #ffffff;
+    border: none;
+    font-size: 1.1rem;
+    padding: 6px 36px;
+}
