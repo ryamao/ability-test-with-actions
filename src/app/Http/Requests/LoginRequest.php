@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Laravel\Fortify\Http\Requests\LoginRequest;
+use Laravel\Fortify\Http\Requests\LoginRequest as RequestsLoginRequest;
 
-class RegisterRequest extends LoginRequest
+class LoginRequest extends RequestsLoginRequest
 {
-    protected $redirect = '/register';
+    protected $redirect = '/login';
 
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class RegisterRequest extends LoginRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'unique:users,email'],
+            'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string', 'max:255'],
         ];
     }
@@ -33,13 +32,9 @@ class RegisterRequest extends LoginRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'お名前を入力してください',
-            'name.string' => 'お名前を入力してください',
-            'name.max' => 'お名前は255文字以内で入力してください',
             'email.required' => 'メールアドレスを入力してください',
             'email.string' => 'メールアドレスを入力してください',
             'email.email' => 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください',
-            'email.unique' => '入力されたメールアドレスは既に登録されています',
             'password.required' => 'パスワードを入力してください',
             'password.string' => 'パスワードを入力してください',
             'password.max' => 'パスワードは255文字以内で入力してください',
