@@ -50,7 +50,7 @@ class AdminControllerTest extends TestCase
      */
     public function test_get_to_register_for_authenticated_users_returns_status_code_200(): void
     {
-        $user = User::create($this->makeTestData());
+        $user = User::create($this->makeRegisterData());
         $response = $this->actingAs($user)->get('/register');
         $response->assertStatus(200);
     }
@@ -61,7 +61,7 @@ class AdminControllerTest extends TestCase
      */
     public function test_get_to_register_for_authenticated_users_renders_view_register(): void
     {
-        $user = User::create($this->makeTestData());
+        $user = User::create($this->makeRegisterData());
         $response = $this->actingAs($user)->get('/register');
         $response->assertViewIs('register');
     }
@@ -72,7 +72,7 @@ class AdminControllerTest extends TestCase
      */
     public function test_get_to_register_for_authenticated_users_causes_no_validation_errors(): void
     {
-        $user = User::create($this->makeTestData());
+        $user = User::create($this->makeRegisterData());
         $response = $this->actingAs($user)->get('/register');
         $response->assertValid();
     }
@@ -83,7 +83,7 @@ class AdminControllerTest extends TestCase
      */
     public function test_post_to_register_with_complete_data_redirects_to_login(): void
     {
-        $response = $this->post('/register', $this->makeTestData());
+        $response = $this->post('/register', $this->makeRegisterData());
         $response->assertRedirect('/login');
     }
 
@@ -93,7 +93,7 @@ class AdminControllerTest extends TestCase
      */
     public function test_post_to_register_with_complete_data_causes_no_validation_errors(): void
     {
-        $response = $this->post('/register', $this->makeTestData());
+        $response = $this->post('/register', $this->makeRegisterData());
         $response->assertValid();
     }
 
@@ -104,7 +104,7 @@ class AdminControllerTest extends TestCase
     public function test_post_to_register_with_complete_data_saves_to_users_table(): void
     {
         $this->assertDatabaseEmpty('users');
-        $data = $this->makeTestData();
+        $data = $this->makeRegisterData();
         $response = $this->post('/register', $data);
         $response->assertRedirect('/login');
         $this->assertDatabaseCount('users', 1);
@@ -159,7 +159,7 @@ class AdminControllerTest extends TestCase
         string $kind,
         string $message,
     ): void {
-        $data = $this->makeTestData();
+        $data = $this->makeRegisterData();
         $data[$name] = $value;
         $response = $this->post('/register', $data);
 
@@ -179,7 +179,7 @@ class AdminControllerTest extends TestCase
         string $kind,
         string $message,
     ): void {
-        $data = $this->makeTestData();
+        $data = $this->makeRegisterData();
         $data[$name] = $value;
         $response = $this->post('/register', $data);
         $response->assertInvalid([$name => $message]);
@@ -197,16 +197,155 @@ class AdminControllerTest extends TestCase
         string $message,
     ): void {
         $this->assertDatabaseEmpty('users');
-        $data = $this->makeTestData();
+        $data = $this->makeRegisterData();
         $data[$name] = $value;
         $this->post('/register', $data);
         $this->assertDatabaseEmpty('users');
     }
 
-    private function makeTestData(): array
+    /**
+     * @testdox [GET /login] [未認証] ステータスコード 200
+     * @group login
+     */
+    public function test_get_to_login_for_guest_users_returns_status_code_200(): void
+    {
+        $response = $this->get('/login');
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @testdox [GET /login] [未認証] ビュー login を表示
+     * @group login
+     */
+    public function test_get_to_login_for_guest_users_renders_view_login(): void
+    {
+        $response = $this->get('/login');
+        $response->assertViewIs('login');
+    }
+
+    /**
+     * @testdox [GET /login] [未認証] 検証エラー無し
+     * @group login
+     */
+    public function test_get_to_login_for_guest_users_causes_no_validation_errors(): void
+    {
+        $response = $this->get('/login');
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox [GET /login] [認証済み] ステータスコード 200
+     * @group login
+     */
+    public function test_get_to_login_for_authenticated_users_redirects_to_admin(): void
+    {
+        $user = User::create($this->makeRegisterData());
+        $response = $this->actingAs($user)->get('/login');
+        $response->assertRedirect('/admin');
+    }
+
+    /**
+     * @testdox [GET /login] [認証済み] 検証エラー無し
+     * @group login
+     */
+    public function test_get_to_login_for_authenticated_users_causes_no_validation_errors(): void
+    {
+        $user = User::create($this->makeRegisterData());
+        $response = $this->actingAs($user)->get('/login');
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox [POST /login] [complete data] /admin へリダイレクト
+     * @group login
+     */
+    public function test_post_to_login_with_complete_data_redirects_to_admin(): void
+    {
+        $data = $this->makeLoginData();
+        $response = $this->post('/login', $data);
+        $response->assertRedirect('/admin');
+    }
+
+    /**
+     * @testdox [POST /login] [complete data] 検証エラー無し
+     * @group login
+     */
+    public function test_post_to_login_with_complete_data_causes_no_validation_errors(): void
+    {
+        $data = $this->makeLoginData();
+        $response = $this->post('/login', $data);
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox [POST /login] [empty data] /login へリダイレクト
+     * @group login
+     */
+    public function test_post_to_login_with_empty_data_redirects_to_login(): void
+    {
+        $response = $this->post('/login');
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * @testdox [POST /login] [empty data] 検証エラー無し
+     * @group login
+     */
+    public function test_post_to_login_with_empty_data_causes_validation_errors(): void
+    {
+        $response = $this->post('/login');
+        $response->assertInvalid();
+    }
+
+    /**
+     * @testdox [POST /login] [$name is $kind] /login へリダイレクト
+     * @group login
+     * @dataProvider loginDataProvider
+     */
+    public function test_post_to_login_with_invalid_parameter_redirects_to_login(
+        string $name,
+        string $value,
+        string $kind,
+        string $message,
+    ): void {
+        $data = $this->makeLoginData();
+        $data[$name] = $value;
+        $response = $this->post('/login', $data);
+
+        // FIXME リダイレクトレスポンスの Location が / になる
+        // $response->assertFound();
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * @testdox [POST /login] [$name is $kind] 検証エラー有り
+     * @group login
+     * @dataProvider loginDataProvider
+     */
+    public function test_post_to_login_with_invalid_parameter_causes_validation_error(
+        string $name,
+        string $value,
+        string $kind,
+        string $message,
+    ): void {
+        $data = $this->makeLoginData();
+        $data[$name] = $value;
+        $response = $this->post('/login', $data);
+        $response->assertInvalid([$name => $message]);
+    }
+
+    private function makeRegisterData(): array
     {
         return [
             'name' => $this->faker->name(),
+            'email' => $this->faker->email(),
+            'password' => $this->faker->password(minLength: 8, maxLength: 255),
+        ];
+    }
+
+    private function makeLoginData(): array
+    {
+        return [
             'email' => $this->faker->email(),
             'password' => $this->faker->password(minLength: 8, maxLength: 255),
         ];
@@ -217,6 +356,16 @@ class AdminControllerTest extends TestCase
         return [
             ['name',     '',                   'empty',     'お名前を入力してください'],
             ['name',     str_repeat('a', 256), 'too long',  'お名前は255文字以内で入力してください'],
+            ['email',    '',                   'empty',     'メールアドレスを入力してください'],
+            ['email',    'a',                  'not email', 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
+            ['password', '',                   'empty',     'パスワードを入力してください'],
+            ['password', str_repeat('a', 256), 'too long',  'パスワードは255文字以内で入力してください'],
+        ];
+    }
+
+    public static function loginDataProvider(): array
+    {
+        return [
             ['email',    '',                   'empty',     'メールアドレスを入力してください'],
             ['email',    'a',                  'not email', 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
             ['password', '',                   'empty',     'パスワードを入力してください'],
