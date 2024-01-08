@@ -27,7 +27,7 @@ class ContactRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'integer', 'between:1,3'],
-            'email' => ['required', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'area_code' => ['required', 'digits_between:1,5'],
             'city_code' => ['required', 'digits_between:1,5'],
             'subscriber_code' => ['required', 'digits_between:1,5'],
@@ -45,8 +45,7 @@ class ContactRequest extends FormRequest
             'first_name.*' => '名を入力してください',
             'gender.*' => '性別を選択してください',
             'email.required' => 'メールアドレスを入力してください',
-            'email.email' => 'メールアドレスはメール形式で入力してください',
-            'email.max' => 'メールアドレスはメール形式で入力してください',
+            'email.*' => 'メールアドレスはメール形式で入力してください',
             'area_code.required' => '電話番号を入力してください',
             'area_code.digits_between' => '電話番号は5桁までの数字で入力してください',
             'city_code.required' => '電話番号を入力してください',
@@ -55,9 +54,8 @@ class ContactRequest extends FormRequest
             'subscriber_code.digits_between' => '電話番号は5桁までの数字で入力してください',
             'address.*' => '住所を入力してください',
             'category_id.*' => 'お問い合わせの種類を選択してください',
-            'detail.required' => 'お問い合わせ内容を入力してください',
-            'detail.string' => 'お問い合わせ内容を入力してください',
             'detail.max' => 'お問合せ内容は120文字以内で入力してください',
+            'detail.*' => 'お問い合わせ内容を入力してください',
         ];
     }
 }

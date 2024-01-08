@@ -28,7 +28,7 @@
         <div class="register">
             <h2 class="register__title">Register</h2>
 
-            <form class="register__form" action="/register" method="post">
+            <form class="register__form" action="/register" method="post" novalidate>
                 @csrf
                 <div class="register__form-inner">
                     <label class="register__label">
@@ -36,6 +36,11 @@
                         <div class="register__input">
                             <input type="text" name="name" placeholder="例: 山田　太郎" />
                         </div>
+                        @error('name')
+                        <div class="register__validation-alert">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </label>
 
                     <label class="register__label">
@@ -43,6 +48,11 @@
                         <div class="register__input">
                             <input type="email" name="email" placeholder="例: test@example.com" />
                         </div>
+                        @error('email')
+                        <div class="register__validation-alert">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </label>
 
                     <label class="register__label">
@@ -50,6 +60,11 @@
                         <div class="register__input">
                             <input type="password" name="password" placeholder="例: coachtech1106" />
                         </div>
+                        @error('password')
+                        <div class="register__validation-alert">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </label>
 
                     <div class="register__button">

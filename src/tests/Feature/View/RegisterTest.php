@@ -12,7 +12,7 @@ class RegisterTest extends TestCase
      */
     public function test_name_exists_in_name_attribute_value(): void
     {
-        $view = $this->view('register');
+        $view = $this->withViewErrors([])->view('register');
         $view->assertSee('name="name"', escape: false);
     }
 
@@ -22,7 +22,7 @@ class RegisterTest extends TestCase
      */
     public function test_email_exists_in_name_attribute_value(): void
     {
-        $view = $this->view('register');
+        $view = $this->withViewErrors([])->view('register');
         $view->assertSee('name="email"', escape: false);
     }
 
@@ -32,7 +32,7 @@ class RegisterTest extends TestCase
      */
     public function test_password_exists_in_name_attribute_value(): void
     {
-        $view = $this->view('register');
+        $view = $this->withViewErrors([])->view('register');
         $view->assertSee('name="password"', escape: false);
     }
 
@@ -40,13 +40,17 @@ class RegisterTest extends TestCase
      * @testdox デフォルトでは、エラーメッセージ $message が表示されない。
      * @group view register
      * @testWith ["お名前を入力してください"]
+     *           ["お名前は255文字以内で入力してください"]
      *           ["メールアドレスを入力してください"]
      *           ["メールアドレスは「ユーザー名@ドメイン」形式で入力してください"]
+     *           ["メールアドレスは255文字以内で入力してください"]
      *           ["パスワードを入力してください"]
+     *           ["パスワードは8文字以上で入力してください"]
+     *           ["パスワードは255文字以内で入力してください"]
      */
     public function test_no_error_message_is_displayed_by_default(string $message): void
     {
-        $view = $this->view('register');
+        $view = $this->withViewErrors([])->view('register');
         $view->assertDontSeeText($message);
     }
 
