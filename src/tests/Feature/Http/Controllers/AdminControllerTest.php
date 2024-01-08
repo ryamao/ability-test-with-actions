@@ -15,76 +15,85 @@ class AdminControllerTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
-     * @testdox [GET /register] 未認証の場合、ステータスコード200
+     * @testdox [GET /register] [未認証] ステータスコード 200
      * @group register
      */
-    public function test_get_register_returns_200_when_user_is_guest(): void
+    public function test_GET_to_register_for_guest_users_returns_status_code_200(): void
     {
         $response = $this->get('/register');
         $response->assertStatus(200);
     }
 
     /**
-     * @testdox [GET /register] 未認証の場合、ビュー register を表示
+     * @testdox [GET /register] [未認証] ビュー register を表示
      * @group register
      */
-    public function test_get_register_renders_register_view_when_user_is_guest(): void
+    public function test_GET_to_register_for_guest_users_renders_view_register(): void
     {
         $response = $this->get('/register');
         $response->assertViewIs('register');
     }
 
     /**
-     * @testdox [GET /register] 未認証の場合、検証エラー無し
+     * @testdox [GET /register] [未認証] 検証エラー無し
      * @group register
      */
-    public function test_get_register_is_valid_when_user_is_guest(): void
+    public function test_GET_to_register_for_guest_users_causes_no_validation_errors(): void
     {
         $response = $this->get('/register');
         $response->assertValid();
     }
 
     /**
-     * @testdox [GET /register] 認証済みの場合、/admin へリダイレクト
+     * @testdox [GET /register] [認証済み] /admin へリダイレクト
      * @group register
      */
-    public function test_get_register_redirects_to_admin_when_user_is_authenticated(): void
+    public function test_GET_to_register_for_authenticated_users_redirects_to_admin(): void
     {
-        $user = User::create($this->normalData());
+        $user = User::create($this->makeTestData());
         $response = $this->actingAs($user)->get('/register');
         $response->assertRedirect('/admin');
     }
 
     /**
-     * @testdox [POST /register] リクエストパラメータに不足がない場合、認証エラー無し
+     * @testdox [GET /register] [認証済み] 検証エラー無し
      * @group register
      */
-    public function test_post_register_is_valid_when_parameters_are_filled(): void
+    public function test_GET_to_register_for_authenticated_users_causes_no_validation_errors(): void
     {
-        $data = $this->normalData();
-        $response = $this->post('/register', $data);
+        $user = User::create($this->makeTestData());
+        $response = $this->actingAs($user)->get('/register');
         $response->assertValid();
     }
 
     /**
-     * @testdox [POST /register] リクエストパラメータに不足がない場合、/login へリダイレクト
+     * @testdox [POST /register] [complete data] /login へリダイレクト
      * @group register
      */
-    public function test_post_register_redirects_to_login_when_parameters_are_filled(): void
+    public function test_POST_to_register_with_complete_data_redirects_to_login(): void
     {
-        $data = $this->normalData();
-        $response = $this->post('/register', $data);
+        $response = $this->post('/register', $this->makeTestData());
         $response->assertRedirect('/login');
     }
 
     /**
-     * @testdox [POST /register] リクエストパラメータに不足がない場合、users テーブルに保存
+     * @testdox [POST /register] [complete data] 検証エラー無し
      * @group register
      */
-    public function test_post_register_stores_to_users_table_when_parameters_are_filled(): void
+    public function test_POST_to_register_with_complete_data_causes_no_validation_errors(): void
+    {
+        $response = $this->post('/register', $this->makeTestData());
+        $response->assertValid();
+    }
+
+    /**
+     * @testdox [POST /register] [complete data] users テーブルに保存
+     * @group register
+     */
+    public function test_POST_to_register_with_complete_data_saves_to_users_table(): void
     {
         $this->assertDatabaseEmpty('users');
-        $data = $this->normalData();
+        $data = $this->makeTestData();
         $response = $this->post('/register', $data);
         $response->assertRedirect('/login');
         $this->assertDatabaseCount('users', 1);
@@ -95,30 +104,34 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * @testdox [POST /register] リクエストパラメータが空の場合、認証エラー有り
+     * @testdox [POST /register] [empty data] /register へリダイレクト
      * @group register
      */
-    public function test_post_register_is_invalid_when_parameters_are_empty(): void
-    {
-        $response = $this->post('/register');
-        $response->assertInvalid();
-    }
-
-    /**
-     * @testdox [POST /register] リクエストパラメータが空の場合、/register へリダイレクト
-     * @group register
-     */
-    public function test_post_register_redirects_register_when_parameters_are_empty(): void
+    public function test_POST_to_register_with_empty_data_redirects_to_register(): void
     {
         $response = $this->post('/register');
         $response->assertRedirect('/register');
     }
 
     /**
-     * @testdox [POST /register] リクエストパラメータが空の場合、users テーブルに変化無し
+     * @testdox [POST /register] [empty data] 認証エラー有り
      * @group register
      */
-    public function test_post_register_does_nothing_to_users_table_when_parameters_are_empty(): void
+    public function test_POST_to_register_with_empty_data_causes_validation_errors(): void
+    {
+        $response = $this->post('/register');
+        $errors = [];
+        foreach (self::parameterNameAndErrorMessageProvider() as [$name, $message]) {
+            $errors[$name] = $message;
+        }
+        $response->assertInvalid($errors);
+    }
+
+    /**
+     * @testdox [POST /register] [empty data] users テーブルに変化無し
+     * @group register
+     */
+    public function test_POST_to_register_with_empty_data_does_nothing_to_users_table(): void
     {
         $this->assertDatabaseEmpty('users');
         $this->post('/register');
@@ -126,57 +139,177 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * @testdox [POST /register] 必須入力項目 $paramName が空の場合、認証エラー有り
+     * @testdox [POST /register] [$name is empty] /register へリダイレクト
      * @group register
-     * @testWith ["name"]
-     *           ["email"]
-     *           ["password"]
+     * @dataProvider parameterNameAndErrorMessageProvider
      */
-    public function test_post_register_is_invalid_when_required_parameter_is_missing(string $paramName): void
+    public function test_POST_to_register_with_lacked_parameter_redirects_to_register(string $name): void
     {
-        $data = $this->normalData();
-        $data[$paramName] = null;
+        $data = $this->makeTestData();
+        $data[$name] = '';
         $response = $this->post('/register', $data);
-        $response->assertInvalid();
+        $response->assertRedirect('/register');
     }
 
     /**
-     * @testdox [POST /register] 必須入力項目 $paramName が空の場合、/register へリダイレクト
+     * @testdox [POST /register] [$name is empty] 認証エラー有り
      * @group register
-     * @testWith ["name"]
-     *           ["email"]
-     *           ["password"]
+     * @dataProvider parameterNameAndErrorMessageProvider
      */
-    public function test_post_register_redirects_to_register_when_required_parameter_is_missing(string $paramName): void
+    public function test_POST_to_register_with_lacked_parameter_causes_validation_errors(string $name, string $message): void
     {
-        $data = $this->normalData();
-        $data[$paramName] = null;
+        $data = $this->makeTestData();
+        $data[$name] = '';
         $response = $this->post('/register', $data);
-        $response->assertRedirect();
+        $response->assertInvalid([$name => $message]);
     }
 
     /**
-     * @testdox [POST /register] 必須入力項目 $paramName が空の場合、users テーブルに変化無し
+     * @testdox [POST /register] [$name is empty] users テーブルに変化無し
      * @group register
-     * @testWith ["name"]
-     *           ["email"]
-     *           ["password"]
+     * @dataProvider parameterNameAndErrorMessageProvider
      */
-    public function test_post_register_does_nothing_users_table_when_required_parameter_is_missing(string $paramName): void
+    public function test_POST_to_register_with_lacked_parameter_does_nothing_to_users_table(string $name): void
     {
         $this->assertDatabaseEmpty('users');
-        $data = $this->normalData();
-        $data[$paramName] = null;
+        $data = $this->makeTestData();
+        $data[$name] = '';
         $this->post('/register', $data);
         $this->assertDatabaseEmpty('users');
     }
 
-    public function normalData(): array
+    /**
+     * @testdox [POST /register] [$name is too long] /register へリダイレクト
+     * @group register
+     * @dataProvider parameterNameAndErrorMessageProvider
+     */
+    public function test_POST_to_register_with_too_long_parameter_redirects_to_register(string $name): void
+    {
+        $data = $this->makeTestData();
+        $data[$name] = str_repeat('a', 256);
+        $response = $this->post('/register', $data);
+        $response->assertRedirect('/register');
+    }
+
+    /**
+     * @testdox [POST /register] [$name is too long] 認証エラー有り
+     * @group register
+     * @dataProvider parameterNameAndErrorMessageProvider
+     */
+    public function test_POST_to_register_with_too_long_parameter_causes_validation_errors(string $name, string $message): void
+    {
+        $data = $this->makeTestData();
+        $data[$name] = str_repeat('a', 256);
+        $response = $this->post('/register', $data);
+        $response->assertInvalid([$name => $message]);
+    }
+
+    /**
+     * @testdox [POST /register] [$name is too long] users テーブルに変化無し
+     * @group register
+     * @dataProvider parameterNameAndErrorMessageProvider
+     */
+    public function test_POST_to_register_with_too_long_parameter_does_nothing_to_users_table(string $name): void
+    {
+        $this->assertDatabaseEmpty('users');
+        $data = $this->makeTestData();
+        $data[$name] = str_repeat('a', 256);
+        $this->post('/register', $data);
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /**
+     * @testdox [POST /register] [$name is array] /register へリダイレクト
+     * @group register
+     * @dataProvider parameterNameAndErrorMessageProvider
+     */
+    public function test_POST_to_register_with_array_parameter_redirects_to_register(string $name): void
+    {
+        $data = $this->makeTestData();
+        $data[$name] = array_fill(0, 3, $data[$name]);
+        $response = $this->post('/register', $data);
+        $response->assertRedirect('/register');
+    }
+
+    /**
+     * @testdox [POST /register] [$name is array] 認証エラー有り
+     * @group register
+     * @dataProvider parameterNameAndErrorMessageProvider
+     */
+    public function test_POST_to_register_with_array_parameter_causes_validation_errors(string $name, string $message): void
+    {
+        $data = $this->makeTestData();
+        $data[$name] = array_fill(0, 3, $data[$name]);
+        $response = $this->post('/register', $data);
+        $response->assertInvalid([$name => $message]);
+    }
+
+    /**
+     * @testdox [POST /register] [$name is array] users テーブルに変化無し
+     * @group register
+     * @dataProvider parameterNameAndErrorMessageProvider
+     */
+    public function test_POST_to_register_with_array_parameter_does_nothing_to_users_table(string $name): void
+    {
+        $this->assertDatabaseEmpty('users');
+        $data = $this->makeTestData();
+        $data[$name] = array_fill(0, 3, $data[$name]);
+        $this->post('/register', $data);
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /**
+     * @testdox [POST /register] [email is not email] /register へリダイレクト
+     * @group register
+     */
+    public function test_POST_to_register_with_invalid_email_redirects_to_register(): void
+    {
+        $data = $this->makeTestData();
+        $data['email'] = 'abc';
+        $response = $this->post('/register', $data);
+        $response->assertRedirect('/register');
+    }
+
+    /**
+     * @testdox [POST /register] [email is not email] 検証エラー有り
+     * @group register
+     */
+    public function test_POST_to_register_with_invalid_email_causes_validation_error(): void
+    {
+        $data = $this->makeTestData();
+        $data['email'] = 'abc';
+        $response = $this->post('/register', $data);
+        $response->assertInvalid(['email' => 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください']);
+    }
+
+    /**
+     * @testdox [POST /register] [email is not email] users テーブルに変化無し
+     * @group register
+     */
+    public function test_POST_to_register_with_invalid_email_does_nothing_to_users_table(): void
+    {
+        $this->assertDatabaseEmpty('users');
+        $data = $this->makeTestData();
+        $data['email'] = 'abc';
+        $this->post('/register', $data);
+        $this->assertDatabaseEmpty('users');
+    }
+
+    private function makeTestData(): array
     {
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->email(),
             'password' => $this->faker->password(),
+        ];
+    }
+
+    public static function parameterNameAndErrorMessageProvider(): array
+    {
+        return [
+            ['name', 'お名前を入力してください'],
+            ['email', 'メールアドレスを入力してください'],
+            ['password', 'パスワードを入力してください'],
         ];
     }
 }
