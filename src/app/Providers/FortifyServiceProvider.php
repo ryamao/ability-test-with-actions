@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Http\Requests\UserRequest;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -18,8 +19,8 @@ class FortifyServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(
-            \Laravel\Fortify\Contracts\RegisterResponse::class,
-            \App\Http\Responses\RegisterResponse::class,
+            \Laravel\Fortify\Http\Requests\LoginRequest::class,
+            UserRequest::class
         );
     }
 
@@ -32,6 +33,11 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::registerView('register');
         Fortify::loginView('login');
+
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\RegisterResponse::class,
+            \App\Http\Responses\RegisterResponse::class,
+        );
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(

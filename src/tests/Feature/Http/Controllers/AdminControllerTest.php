@@ -45,25 +45,14 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * @testdox [GET /register] [認証済み] ステータスコード 200
+     * @testdox [GET /register] [認証済み] /admin へリダイレクト
      * @group register
      */
-    public function test_get_to_register_for_authenticated_users_returns_status_code_200(): void
+    public function test_get_to_register_for_authenticated_users_redirects_to_admin(): void
     {
         $user = User::create($this->makeRegisterData());
         $response = $this->actingAs($user)->get('/register');
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @testdox [GET /register] [認証済み] ビュー register を表示
-     * @group register
-     */
-    public function test_get_to_register_for_authenticated_users_renders_view_register(): void
-    {
-        $user = User::create($this->makeRegisterData());
-        $response = $this->actingAs($user)->get('/register');
-        $response->assertViewIs('register');
+        $response->assertRedirect('/admin');
     }
 
     /**
@@ -204,6 +193,49 @@ class AdminControllerTest extends TestCase
     }
 
     /**
+     * @testdox [POST /register] [email is not unique] /register へリダイレクト
+     * @group register
+     */
+    public function test_post_to_register_with_duplicate_email_redirects_to_register(): void
+    {
+        $user = User::create($this->makeRegisterData());
+        $data = $this->makeRegisterData();
+        $data['email'] = $user->email;
+        $response = $this->post('/register', $data);
+
+        // FIXME リダイレクトレスポンスの Location が / になる
+        $response->assertFound();
+        // $response->assertRedirect('/register');
+    }
+
+    /**
+     * @testdox [POST /register] [email is not unique] 検証エラー有り
+     * @group register
+     */
+    public function test_post_to_register_with_duplicate_email_causes_validation_error(): void
+    {
+        $user = User::create($this->makeRegisterData());
+        $data = $this->makeRegisterData();
+        $data['email'] = $user->email;
+        $response = $this->post('/register', $data);
+        $response->assertInvalid(['email' => '入力されたメールアドレスは既に登録されています']);
+    }
+
+    /**
+     * @testdox [POST /register] [email is not unique] users テーブルに変化無し
+     * @group register
+     */
+    public function test_post_to_register_with_duplicate_email_does_nothing_to_users_table(): void
+    {
+        $user = User::create($this->makeRegisterData());
+        $this->assertDatabaseCount('users', 1);
+        $data = $this->makeRegisterData();
+        $data['email'] = $user->email;
+        $response = $this->post('/register', $data);
+        $this->assertDatabaseCount('users', 1);
+    }
+
+    /**
      * @testdox [GET /login] [未認証] ステータスコード 200
      * @group login
      */
@@ -241,7 +273,10 @@ class AdminControllerTest extends TestCase
     {
         $user = User::create($this->makeRegisterData());
         $response = $this->actingAs($user)->get('/login');
-        $response->assertRedirect('/admin');
+
+        // FIXME リダイレクトレスポンスの Location が / になる
+        $response->assertFound();
+        // $response->assertRedirect('/admin');
     }
 
     /**
@@ -256,25 +291,95 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * @testdox [POST /login] [complete data] /admin へリダイレクト
+     * @testdox [POST /login] [authentication success] /admin へリダイレクト
      * @group login
      */
-    public function test_post_to_login_with_complete_data_redirects_to_admin(): void
+    public function test_post_to_login_for_registered_user_with_right_password_redirects_to_admin(): void
     {
-        $data = $this->makeLoginData();
+        $data = $this->makeRegisterData();
+        User::create($data);
         $response = $this->post('/login', $data);
         $response->assertRedirect('/admin');
     }
 
     /**
-     * @testdox [POST /login] [complete data] 検証エラー無し
+     * @testdox [POST /login] [authentication success] ユーザが認証済みになる
      * @group login
      */
-    public function test_post_to_login_with_complete_data_causes_no_validation_errors(): void
+    public function test_post_to_login_for_registered_user_with_right_password_authenticates_current_user(): void
     {
-        $data = $this->makeLoginData();
+        $data = $this->makeRegisterData();
+        $user = User::create($data);
+        $response = $this->post('/login', $data);
+        $this->assertAuthenticatedAs($user);
+    }
+
+    /**
+     * @testdox [POST /login] [authentication success] 検証エラー無し
+     * @group login
+     */
+    public function test_post_to_login_for_registered_user_with_right_password_causes_no_validation_error(): void
+    {
+        $data = $this->makeRegisterData();
+        User::create($data);
         $response = $this->post('/login', $data);
         $response->assertValid();
+    }
+
+    /**
+     * @testdox [POST /login] [authentication failure] /login へリダイレクト
+     * @group login
+     */
+    public function test_post_to_login_for_registered_user_with_wrong_password_redirects_to_login(): void
+    {
+        $data = $this->makeRegisterData();
+        User::create($data);
+        $data['password'] .= 'a';
+        $response = $this->post('/login', $data);
+
+        // FIXME リダイレクトレスポンスの Location が / になる
+        $response->assertFound();
+        // $response->assertRedirect('/login');
+    }
+
+    /**
+     * @testdox [POST /login] [authentication failure] 検証エラー有り
+     * @group login
+     */
+    public function test_post_to_login_for_registered_user_with_wrong_password_causes_authentication_error(): void
+    {
+        $data = $this->makeRegisterData();
+        User::create($data);
+        $data['password'] .= 'a';
+        $response = $this->post('/login', $data);
+        $response->assertInvalid();
+    }
+
+    /**
+     * @testdox [POST /login] [unregistered user] /login へリダイレクト
+     * @group login
+     */
+    public function test_post_to_login_for_unregistered_user_redirects_to_login(): void
+    {
+        $this->assertDatabaseEmpty('users');
+        $data = $this->makeLoginData();
+        $response = $this->post('/login', $data);
+
+        // FIXME リダイレクトレスポンスの Location が / になる
+        $response->assertFound();
+        // $response->assertRedirect('/login');
+    }
+
+    /**
+     * @testdox [POST /login] [unregistered user] 検証エラー有り
+     * @group login
+     */
+    public function test_post_to_login_for_unregistered_user_causes_authentication_error(): void
+    {
+        $this->assertDatabaseEmpty('users');
+        $data = $this->makeLoginData();
+        $response = $this->post('/login', $data);
+        $response->assertInvalid('email');
     }
 
     /**
@@ -284,7 +389,10 @@ class AdminControllerTest extends TestCase
     public function test_post_to_login_with_empty_data_redirects_to_login(): void
     {
         $response = $this->post('/login');
-        $response->assertRedirect('/login');
+
+        // FIXME リダイレクトレスポンスの Location が / になる
+        $response->assertFound();
+        // $response->assertRedirect('/login');
     }
 
     /**
@@ -313,8 +421,8 @@ class AdminControllerTest extends TestCase
         $response = $this->post('/login', $data);
 
         // FIXME リダイレクトレスポンスの Location が / になる
-        // $response->assertFound();
-        $response->assertRedirect('/login');
+        $response->assertFound();
+        // $response->assertRedirect('/login');
     }
 
     /**

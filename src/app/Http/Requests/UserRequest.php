@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Laravel\Fortify\Http\Requests\LoginRequest;
 
-class UserRequest extends FormRequest
+class UserRequest extends LoginRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,17 +21,20 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'max:255'],
-        ];
-
-        if ($this->is('/login')) {
-            unset($rules['name']);
+        if ($this->is('register')) {
+            return [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'unique:users,email', 'max:255'],
+                'password' => ['required', 'string', 'max:255'],
+            ];
+        } elseif ($this->is('login')) {
+            return [
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'password' => ['required', 'string', 'max:255'],
+            ];
         }
 
-        return $rules;
+        return [];
     }
 
     public function messages(): array
@@ -43,6 +46,7 @@ class UserRequest extends FormRequest
             'email.required' => 'メールアドレスを入力してください',
             'email.string' => 'メールアドレスを入力してください',
             'email.email' => 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください',
+            'email.unique' => '入力されたメールアドレスは既に登録されています',
             'email.max' => 'メールアドレスは255文字以内で入力してください',
             'password.required' => 'パスワードを入力してください',
             'password.string' => 'パスワードを入力してください',
