@@ -184,7 +184,8 @@ class AdminControllerTest extends TestCase
      */
     public function test_delete_to_admin_for_guest_redirects_to_login(): void
     {
-        $response = $this->delete('/admin');
+        $this->assertDatabaseEmpty('contacts');
+        $response = $this->delete('/admin/1');
         $response->assertRedirect('/login');
     }
 
@@ -197,7 +198,7 @@ class AdminControllerTest extends TestCase
         self::storeTestData();
         $user = User::create(RegisterTest::makeRegisterData());
         $contact = Contact::random();
-        $this->actingAs($user)->delete('/admin', ['id' => $contact->id]);
+        $this->actingAs($user)->delete("/admin/{$contact->id}");
         $this->assertNull(Contact::find($contact->id));
     }
 
@@ -210,7 +211,7 @@ class AdminControllerTest extends TestCase
         self::storeTestData();
         $user = User::create(RegisterTest::makeRegisterData());
         $contact = Contact::random();
-        $response = $this->actingAs($user)->delete('/admin', ['id' => $contact->id]);
+        $response = $this->actingAs($user)->delete("/admin/{$contact->id}");
         $response->assertRedirect('/admin');
     }
 
@@ -225,7 +226,7 @@ class AdminControllerTest extends TestCase
         $user = User::create(RegisterTest::makeRegisterData());
         $nonexistingId = 999;
         while (!is_null(Contact::find($nonexistingId))) $nonexistingId++;
-        $this->actingAs($user)->delete('/admin', ['id' => $nonexistingId]);
+        $this->actingAs($user)->delete("/admin/{$nonexistingId}");
         $this->assertDatabaseCount('contacts', $contactCount);
     }
 
@@ -239,7 +240,7 @@ class AdminControllerTest extends TestCase
         $user = User::create(RegisterTest::makeRegisterData());
         $nonexistingId = 999;
         while (!is_null(Contact::find($nonexistingId))) $nonexistingId++;
-        $response = $this->actingAs($user)->delete('/admin', ['id' => $nonexistingId]);
+        $response = $this->actingAs($user)->delete("/admin/{$nonexistingId}");
         $response->assertRedirect('/admin');
     }
 
