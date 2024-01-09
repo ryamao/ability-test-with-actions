@@ -51,7 +51,7 @@ class LoginTest extends TestCase
     {
         $user = User::create(RegisterTest::makeRegisterData());
         $response = $this->actingAs($user)->get('/login');
-        $response->assertRedirect('/admin');
+        $response->assertStatus(200);
     }
 
     /**
@@ -218,6 +218,7 @@ class LoginTest extends TestCase
         return [
             ['email',    '',                   'empty',     'メールアドレスを入力してください'],
             ['email',    'a',                  'not email', 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
+            ['email',    str_repeat('a', 255), 'too long',  'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
             ['password', '',                   'empty',     'パスワードを入力してください'],
             ['password', str_repeat('a', 256), 'too long',  'パスワードは255文字以内で入力してください'],
         ];

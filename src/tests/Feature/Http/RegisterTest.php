@@ -235,13 +235,16 @@ class RegisterTest extends TestCase
 
     public static function registerDataProvider(): array
     {
+        $tooLongString = str_repeat('a', 256);
+        $tooLongEmail = str_repeat('a', 64) . '@' . str_repeat('a', 254 - 64 - 1);
         return [
-            ['name',     '',                   'empty',     'お名前を入力してください'],
-            ['name',     str_repeat('a', 256), 'too long',  'お名前は255文字以内で入力してください'],
-            ['email',    '',                   'empty',     'メールアドレスを入力してください'],
-            ['email',    'a',                  'not email', 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
-            ['password', '',                   'empty',     'パスワードを入力してください'],
-            ['password', str_repeat('a', 256), 'too long',  'パスワードは255文字以内で入力してください'],
+            ['name',     '',             'empty',     'お名前を入力してください'],
+            ['name',     $tooLongString, 'too long',  'お名前は255文字以内で入力してください'],
+            ['email',    '',             'empty',     'メールアドレスを入力してください'],
+            ['email',    'a',            'not email', 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
+            ['email',    $tooLongEmail,  'too long',  'メールアドレスは「ユーザー名@ドメイン」形式で入力してください'],
+            ['password', '',             'empty',     'パスワードを入力してください'],
+            ['password', $tooLongString, 'too long',  'パスワードは255文字以内で入力してください'],
         ];
     }
 }
