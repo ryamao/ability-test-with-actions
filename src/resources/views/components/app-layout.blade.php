@@ -26,6 +26,10 @@
     <header>
         <div class="header">
             <h1 class="header__title">FashionablyLate</h1>
+
+            @isset($headerRight)
+            {{ $headerRight }}
+            @endisset
         </div>
     </header>
     @endif

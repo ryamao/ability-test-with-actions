@@ -4,22 +4,42 @@ body {
 }
 
 input,
-textarea {
+textarea,
+select {
     font-family: inherit;
 }
 
 .header {
-    border-bottom: 1px solid #e0dfde;
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 1rem 5rem;
 }
 
 .header__title {
-    text-align: center;
+    grid-column: 2;
+    margin: 0;
     font-weight: normal;
+}
+
+.header__nav {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header__nav-link {
+    text-decoration: none;
+    color: #d9c6b5;
+    background-color: #f0f0f0;
+    border: 1px solid #d9c6b5;
+    padding: 0.2rem 1.3rem;
 }
 
 .content__title {
     text-align: center;
     font-size: 1.8rem;
     font-weight: normal;
-    margin: 40px 0;
+    margin: 2.7rem 0;
 }
