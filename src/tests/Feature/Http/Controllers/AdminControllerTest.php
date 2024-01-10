@@ -36,7 +36,7 @@ class AdminControllerTest extends TestCase
     {
         $user = User::create(RegisterTest::makeRegisterData());
         $response = $this->actingAs($user)->get('/admin');
-        $response->assertStatus(200);
+        $response->assertOk();
     }
 
     /**
@@ -79,10 +79,11 @@ class AdminControllerTest extends TestCase
         self::storeTestData($n);
         $user = User::create(RegisterTest::makeRegisterData());
         $response = $this->actingAs($user)->get('/admin');
-        foreach (Contact::limit(10) as $contact) {
+        $contacts = Contact::orderBy('created_at')->get();
+        foreach ($contacts->take(10) as $contact) {
             $response->assertSeeText($contact->detail);
         }
-        foreach (Contact::offset(11) as $contact) {
+        foreach ($contacts->skip(10) as $contact) {
             $response->assertDontSeeText($contact->detail);
         }
     }
@@ -197,9 +198,9 @@ class AdminControllerTest extends TestCase
     {
         self::storeTestData();
         $user = User::create(RegisterTest::makeRegisterData());
-        $contact = Contact::random();
+        $contact = Contact::all()->random();
         $this->actingAs($user)->delete("/admin/{$contact->id}");
-        $this->assertNull(Contact::find($contact->id));
+        $this->assertTrue(Contact::where('id', '=', $contact->id)->doesntExist());
     }
 
     /**
@@ -210,13 +211,13 @@ class AdminControllerTest extends TestCase
     {
         self::storeTestData();
         $user = User::create(RegisterTest::makeRegisterData());
-        $contact = Contact::random();
+        $contact = Contact::all()->random();
         $response = $this->actingAs($user)->delete("/admin/{$contact->id}");
         $response->assertRedirect('/admin');
     }
 
     /**
-     * @testdox [DELETE /admin] [contact exists] contacts テーブルから削除
+     * @testdox [DELETE /admin] [contact not exists] contacts テーブルに変化無し
      * @group admin
      */
     public function test_delete_to_admin_for_admin_with_nonexisting_contact_does_nothing_to_contacts_table(): void
@@ -231,7 +232,7 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * @testdox [DELETE /admin] [contact exists] /admin へリダイレクト
+     * @testdox [DELETE /admin] [contact not exists] /admin へリダイレクト
      * @group admin
      */
     public function test_delete_to_admin_for_admin_with_nonexisting_contact_redirects_to_admin(): void
@@ -241,7 +242,29 @@ class AdminControllerTest extends TestCase
         $nonexistingId = 999;
         while (!is_null(Contact::find($nonexistingId))) $nonexistingId++;
         $response = $this->actingAs($user)->delete("/admin/{$nonexistingId}");
-        $response->assertRedirect('/admin');
+        $response->assertNotFound();
+    }
+
+    /**
+     * @testdox [POST /logout] [guest user] /login へリダイレクト
+     * @group admin
+     */
+    public function test_post_to_login_for_guest_redirects_to_login(): void
+    {
+        $response = $this->post('/logout');
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * @testdox [POST /logout] [admin user] /login へリダイレクト
+     * @group admin
+     */
+    public function test_post_to_login_for_admin_redirects_to_login(): void
+    {
+        $user = User::create(RegisterTest::makeRegisterData());
+        $this->actingAs($user)->get('/admin');
+        $response = $this->actingAs($user)->post('/logout');
+        $response->assertRedirect('/login');
     }
 
     public static function storeTestData(?int $contactCount = null): void

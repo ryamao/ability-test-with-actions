@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Responses;
 
-use Illuminate\Support\Facades\Auth;
-use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
+use Laravel\Fortify\Contracts\LogoutResponse as ContractsLogoutResponse;
 
-class RegisterResponse implements RegisterResponseContract
+class LogoutResponse implements ContractsLogoutResponse
 {
     /**
      * Create an HTTP response that represents the object.
@@ -17,7 +16,6 @@ class RegisterResponse implements RegisterResponseContract
      */
     public function toResponse($request)
     {
-        Auth::logout();
         return redirect('/login');
     }
 }
