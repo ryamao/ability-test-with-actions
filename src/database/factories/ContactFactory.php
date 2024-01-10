@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Category;
@@ -30,8 +32,8 @@ class ContactFactory extends Factory
             'address' => fake()->address(),
             'building' => fake()->buildingNumber(),
             'detail' => implode(PHP_EOL, [
-                fake()->realText(fake()->numberBetween(30, 60)),
-                fake()->realText(fake()->numberBetween(30, 60)),
+                fake()->realTextBetween(30, 60),
+                fake()->realTextBetween(30, 60),
             ]),
             'created_at' => $createdAt,
             'updated_at' => $createdAt,

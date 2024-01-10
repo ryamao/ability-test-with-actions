@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
-use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;

@@ -7,16 +7,17 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Category;
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\Models\ContactTest;
 use Tests\TestCase;
 
 class ContactControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     /**
      * @testdox [GET /] ステータスコード200
-     * @group index
+     * @group contact
      */
     public function test_http_get_index_returns_200(): void
     {
@@ -25,18 +26,18 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox [GET /] view('index') を表示
-     * @group index
+     * @testdox [GET /] view('contact') を表示
+     * @group contact
      */
-    public function test_http_get_index_renders_index_view(): void
+    public function test_http_get_index_renders_contact_view(): void
     {
         $response = $this->get('/');
-        $response->assertViewIs('index');
+        $response->assertViewIs('contact');
     }
 
     /**
      * @testdox [GET /] 検証エラー無し
-     * @group index
+     * @group contact
      */
     public function test_http_get_index_is_valid(): void
     {
@@ -60,7 +61,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_returns_200_when_parameters_are_filled(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/confirm', $data);
         $response->assertStatus(200);
     }
@@ -71,7 +72,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_renders_confirm_view_when_parameters_are_filled(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/confirm', $data);
         $response->assertViewIs('confirm');
     }
@@ -82,7 +83,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_is_valid_when_parameters_are_filled(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/confirm', $data);
         $response->assertValid();
     }
@@ -93,7 +94,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_returns_200_when_building_is_missing(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/confirm', $data);
         $response->assertStatus(200);
@@ -105,7 +106,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_renders_confirm_view_when_building_is_missing(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/confirm', $data);
         $response->assertViewIs('confirm');
@@ -117,7 +118,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_is_valid_when_building_is_missing(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/confirm', $data);
         $response->assertValid();
@@ -141,7 +142,7 @@ class ContactControllerTest extends TestCase
         string $paramName,
         string $errorMessage,
     ): void {
-        $data = ContactTest::normalParams();
+        $data = $this->makeTestData();
         $data[$paramName] = null;
         $response = $this->post('/confirm', $data);
         $response->assertRedirect('/');
@@ -154,7 +155,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_sends_error_when_email_format_is_incorrect(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['email'] = 'test';
         $response = $this->post('/confirm', $data);
         $response->assertRedirect('/');
@@ -177,7 +178,7 @@ class ContactControllerTest extends TestCase
         string $subscriberCode,
         string $incorrectParamName,
     ): void {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['area_code'] = $areaCode;
         $data['city_code'] = $cityCode;
         $data['subscriber_code'] = $subscriberCode;
@@ -192,7 +193,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_confirm_sends_error_when_detail_is_too_long(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['detail'] = str_repeat('A', 121);
         $response = $this->post('/confirm', $data);
         $response->assertRedirect('/');
@@ -256,7 +257,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_is_invalid_when_required_param_is_missing(string $paramName): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data[$paramName] = null;
         $response = $this->post('/thanks', $data);
         $response->assertInvalid($paramName);
@@ -278,7 +279,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_redirects_to_index_when_required_param_is_missing(string $paramName): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data[$paramName] = null;
         $response = $this->post('/thanks', $data);
         $response->assertRedirect('/');
@@ -301,7 +302,7 @@ class ContactControllerTest extends TestCase
     public function test_http_post_thanks_does_nothing_to_contacts_when_required_param_is_missing(string $paramName): void
     {
         $this->assertDatabaseEmpty('contacts');
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data[$paramName] = null;
         $this->post('/thanks', $data);
         $this->assertDatabaseEmpty('contacts');
@@ -313,7 +314,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_returns_200_when_parameters_are_filled(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/thanks', $data);
         $response->assertStatus(200);
     }
@@ -324,7 +325,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_renders_thanks_when_parameters_are_filled(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/thanks', $data);
         $response->assertViewIs('thanks');
     }
@@ -335,7 +336,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_is_valid_when_parameters_are_filled(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/thanks', $data);
         $response->assertValid();
     }
@@ -347,7 +348,7 @@ class ContactControllerTest extends TestCase
     public function test_http_post_thanks_stores_to_contacts_when_parameters_are_filled(): void
     {
         $this->assertDatabaseEmpty('contacts');
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $response = $this->post('/thanks', $data);
         $response->assertValid();
         $this->assertDatabaseCount('contacts', 1);
@@ -369,7 +370,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_returns_200_when_building_is_missing(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/thanks', $data);
         $response->assertStatus(200);
@@ -381,7 +382,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_renders_thanks_when_building_is_missing(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/thanks', $data);
         $response->assertViewIs('thanks');
@@ -393,7 +394,7 @@ class ContactControllerTest extends TestCase
      */
     public function test_http_post_thanks_is_valid_when_building_is_missing(): void
     {
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/thanks', $data);
         $response->assertValid();
@@ -406,7 +407,7 @@ class ContactControllerTest extends TestCase
     public function test_http_post_thanks_stores_to_contacts_when_building_is_missing(): void
     {
         $this->assertDatabaseEmpty('contacts');
-        $data = self::normalFormData();
+        $data = $this->makeTestData();
         $data['building'] = null;
         $response = $this->post('/thanks', $data);
         $response->assertValid();
@@ -423,13 +424,21 @@ class ContactControllerTest extends TestCase
         $this->assertEquals($data['detail'], $contact->detail);
     }
 
-    public function normalFormData(): array
+    private function makeTestData(): array
     {
-        $data = ContactTest::normalParams();
-        unset($data['tel']);
-        $data['area_code'] = '080';
-        $data['city_code'] = '1234';
-        $data['subscriber_code'] = '5678';
-        return $data;
+        $category = Category::create(['content' => $this->faker->text()]);
+        return [
+            'category_id' => $category->id,
+            'first_name' => $this->faker->firstNameMale(),
+            'last_name' => $this->faker->lastName(),
+            'gender' => 1,
+            'email' => $this->faker->email(),
+            'area_code' => str_pad((string) $this->faker->numberBetween(0, 999), 3, '0', STR_PAD_LEFT),
+            'city_code' => str_pad((string) $this->faker->numberBetween(0, 9999), 4, '0', STR_PAD_LEFT),
+            'subscriber_code' => str_pad((string) $this->faker->numberBetween(0, 9999), 4, '0', STR_PAD_LEFT),
+            'address' => $this->faker->address(),
+            'building' => $this->faker->buildingNumber(),
+            'detail' => $this->faker->realTextBetween(60, 120),
+        ];
     }
 }
