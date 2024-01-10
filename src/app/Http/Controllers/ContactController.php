@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ContactRequest;
 use App\Models\Category;
 use App\Models\Contact;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ContactController extends Controller
@@ -39,7 +40,7 @@ class ContactController extends Controller
         return view('confirm', $validated);
     }
 
-    public function store(ContactRequest $request): View
+    public function store(ContactRequest $request): RedirectResponse
     {
         $data = $request->only([
             'category_id',
@@ -59,6 +60,11 @@ class ContactController extends Controller
 
         Contact::create($data);
 
+        return redirect('/thanks');
+    }
+
+    public function thanks(): View
+    {
         return view('thanks');
     }
 }

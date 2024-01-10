@@ -201,48 +201,48 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox [GET /thanks] ステータスコード405
+     * @testdox [GET /contact] ステータスコード405
      * @group thanks
      */
-    public function test_http_get_thanks_returns_405(): void
+    public function test_get_to_contact_returns_status_code_405(): void
     {
-        $response = $this->get('/thanks');
+        $response = $this->get('/contact');
         $response->assertStatus(405);
     }
 
     /**
-     * @testdox [POST /thanks] リクエストパラメータが無い場合、検証エラー有り
+     * @testdox [POST /contact] [empty data] 検証エラー有り
      * @group thanks
      */
-    public function test_http_post_thanks_is_invalid_when_params_are_empty(): void
+    public function test_post_to_contact_with_empty_data_causes_validation_error(): void
     {
-        $response = $this->post('/thanks');
+        $response = $this->post('/contact');
         $response->assertInvalid();
     }
 
     /**
-     * @testdox [POST /thanks] リクエストパラメータが無い場合、`/` へリダイレクト
+     * @testdox [POST /contact] [empty data] / へリダイレクト
      * @group thanks
      */
-    public function test_http_post_thanks_redirects_to_index_when_params_are_empty(): void
+    public function test_post_to_contact_with_empty_data_redirects_to_index(): void
     {
-        $response = $this->post('/thanks');
+        $response = $this->post('/contact');
         $response->assertRedirect('/');
     }
 
     /**
-     * @testdox [POST /thanks] リクエストパラメータが無い場合、`contacts` テーブルに変化無し
+     * @testdox [POST /contact] [empty data] `contacts` テーブルに変化無し
      * @group thanks
      */
-    public function test_http_post_thanks_does_nothing_to_contacts_when_params_are_empty(): void
+    public function test_post_to_contact_with_empty_data_does_nothing_to_contacts_table(): void
     {
         $this->assertDatabaseEmpty('contacts');
-        $this->post('/thanks');
+        $this->post('/contact');
         $this->assertDatabaseEmpty('contacts');
     }
 
     /**
-     * @testdox [POST /thanks] 入力必須項目 $paramName が足りない場合、検証エラー有り
+     * @testdox [POST /contact] [$paramName is missing] 検証エラー有り
      * @group thanks
      * @testWith ["last_name", "姓を入力してください"]
      *           ["first_name", "名を入力してください"]
@@ -255,16 +255,16 @@ class ContactControllerTest extends TestCase
      *           ["category_id", "お問い合わせの種類を選択してください"]
      *           ["detail", "お問い合わせ内容を入力してください"]
      */
-    public function test_http_post_thanks_is_invalid_when_required_param_is_missing(string $paramName): void
+    public function test_post_to_contact_with_lacked_data_causes_validation_error(string $paramName): void
     {
         $data = $this->makeTestData();
         $data[$paramName] = null;
-        $response = $this->post('/thanks', $data);
+        $response = $this->post('/contact', $data);
         $response->assertInvalid($paramName);
     }
 
     /**
-     * @testdox [POST /thanks] 入力必須項目 $paramName が足りない場合、`/` へリダイレクト
+     * @testdox [POST /contact] [$paramName is missing] / へリダイレクト
      * @group thanks
      * @testWith ["last_name", "姓を入力してください"]
      *           ["first_name", "名を入力してください"]
@@ -277,16 +277,16 @@ class ContactControllerTest extends TestCase
      *           ["category_id", "お問い合わせの種類を選択してください"]
      *           ["detail", "お問い合わせ内容を入力してください"]
      */
-    public function test_http_post_thanks_redirects_to_index_when_required_param_is_missing(string $paramName): void
+    public function test_post_to_contact_with_lacked_data_redirects_to_index(string $paramName): void
     {
         $data = $this->makeTestData();
         $data[$paramName] = null;
-        $response = $this->post('/thanks', $data);
+        $response = $this->post('/contact', $data);
         $response->assertRedirect('/');
     }
 
     /**
-     * @testdox [POST /thanks] 入力必須項目 $paramName が足りない場合、`contacts` テーブルに変化無し
+     * @testdox [POST /contact] [$paramName is missing] contacts テーブルに変化無し
      * @group thanks
      * @testWith ["last_name", "姓を入力してください"]
      *           ["first_name", "名を入力してください"]
@@ -299,57 +299,35 @@ class ContactControllerTest extends TestCase
      *           ["category_id", "お問い合わせの種類を選択してください"]
      *           ["detail", "お問い合わせ内容を入力してください"]
      */
-    public function test_http_post_thanks_does_nothing_to_contacts_when_required_param_is_missing(string $paramName): void
+    public function test_post_to_contact_with_lacked_data_does_nothing_to_contacts_table(string $paramName): void
     {
         $this->assertDatabaseEmpty('contacts');
         $data = $this->makeTestData();
         $data[$paramName] = null;
-        $this->post('/thanks', $data);
+        $this->post('/contact', $data);
         $this->assertDatabaseEmpty('contacts');
     }
 
     /**
-     * @testdox [POST /thanks] すべての項目が入力されている場合、ステータスコード200
+     * @testdox [POST /contact] [valid data] /thanks へリダイレクト
      * @group thanks
      */
-    public function test_http_post_thanks_returns_200_when_parameters_are_filled(): void
+    public function test_post_to_contact_with_valid_data_redirects_to_thanks(): void
     {
         $data = $this->makeTestData();
-        $response = $this->post('/thanks', $data);
-        $response->assertStatus(200);
+        $response = $this->post('/contact', $data);
+        $response->assertRedirect('/thanks');
     }
 
     /**
-     * @testdox [POST /thanks] すべての項目が入力されている場合、view('thanks') を表示
+     * @testdox [POST /contact] [valid data] contacts テーブルに保存
      * @group thanks
      */
-    public function test_http_post_thanks_renders_thanks_when_parameters_are_filled(): void
-    {
-        $data = $this->makeTestData();
-        $response = $this->post('/thanks', $data);
-        $response->assertViewIs('thanks');
-    }
-
-    /**
-     * @testdox [POST /thanks] すべての項目が入力されている場合、検証エラー無し
-     * @group thanks
-     */
-    public function test_http_post_thanks_is_valid_when_parameters_are_filled(): void
-    {
-        $data = $this->makeTestData();
-        $response = $this->post('/thanks', $data);
-        $response->assertValid();
-    }
-
-    /**
-     * @testdox [POST /thanks] すべての項目が入力されている場合、`contacts` テーブルに保存
-     * @group thanks
-     */
-    public function test_http_post_thanks_stores_to_contacts_when_parameters_are_filled(): void
+    public function test_post_to_contact_with_valid_data_stores_to_contacts_table(): void
     {
         $this->assertDatabaseEmpty('contacts');
         $data = $this->makeTestData();
-        $response = $this->post('/thanks', $data);
+        $response = $this->post('/contact', $data);
         $response->assertValid();
         $this->assertDatabaseCount('contacts', 1);
         $contact = Contact::first();
@@ -365,51 +343,27 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox [POST /thanks] 建物名だけ入力されていない場合、ステータスコード200
+     * @testdox [POST /contact] [building is missing] /thanks へリダイレクト
      * @group thanks
      */
-    public function test_http_post_thanks_returns_200_when_building_is_missing(): void
+    public function test_post_to_contact_with_lacked_building_redirects_to_thanks(): void
     {
         $data = $this->makeTestData();
         $data['building'] = null;
-        $response = $this->post('/thanks', $data);
-        $response->assertStatus(200);
+        $response = $this->post('/contact', $data);
+        $response->assertRedirect('/thanks');
     }
 
     /**
-     * @testdox [POST /thanks] 建物名だけ入力されていない場合、view('thanks') を表示
+     * @testdox [POST /thanks] [building is missing] contacts テーブルに保存
      * @group thanks
      */
-    public function test_http_post_thanks_renders_thanks_when_building_is_missing(): void
-    {
-        $data = $this->makeTestData();
-        $data['building'] = null;
-        $response = $this->post('/thanks', $data);
-        $response->assertViewIs('thanks');
-    }
-
-    /**
-     * @testdox [POST /thanks] 建物名だけ入力されていない場合、検証エラー無し
-     * @group thanks
-     */
-    public function test_http_post_thanks_is_valid_when_building_is_missing(): void
-    {
-        $data = $this->makeTestData();
-        $data['building'] = null;
-        $response = $this->post('/thanks', $data);
-        $response->assertValid();
-    }
-
-    /**
-     * @testdox [POST /thanks] 建物名だけ入力されていない場合、`contacts` テーブルに保存
-     * @group thanks
-     */
-    public function test_http_post_thanks_stores_to_contacts_when_building_is_missing(): void
+    public function test_post_to_contact_with_lacked_building_stores_to_contacts_table(): void
     {
         $this->assertDatabaseEmpty('contacts');
         $data = $this->makeTestData();
         $data['building'] = null;
-        $response = $this->post('/thanks', $data);
+        $response = $this->post('/contact', $data);
         $response->assertValid();
         $this->assertDatabaseCount('contacts', 1);
         $contact = Contact::first();
