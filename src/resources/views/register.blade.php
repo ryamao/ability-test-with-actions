@@ -17,11 +17,9 @@
         <form class="register__form" action="/register" method="post" novalidate>
             @csrf
             <div class="register__layout">
-                <label class="register__input-unit">
-                    <div class="register__label-text">お名前</div>
-                    <div class="register__input">
-                        <input type="text" name="name" placeholder="例: 山田　太郎" />
-                    </div>
+                <label class="register__group">
+                    <div class="register__text">お名前</div>
+                    <input class="register__input" type="text" name="name" placeholder="例: 山田　太郎" />
                     @error('name')
                     <div class="register__validation-alert">
                         {{ $message }}
@@ -29,11 +27,9 @@
                     @enderror
                 </label>
 
-                <label class="register__input-unit">
-                    <div class="register__label-text">メールアドレス</div>
-                    <div class="register__input">
-                        <input type="email" name="email" placeholder="例: test@example.com" />
-                    </div>
+                <label class="register__group">
+                    <div class="register__text">メールアドレス</div>
+                    <input class="register__input" type="email" name="email" placeholder="例: test@example.com" />
                     @error('email')
                     <div class="register__validation-alert">
                         {{ $message }}
@@ -41,11 +37,9 @@
                     @enderror
                 </label>
 
-                <label class="register__input-unit">
-                    <div class="register__label-text">パスワード</div>
-                    <div class="register__input">
-                        <input type="password" name="password" placeholder="例: coachtech1106" />
-                    </div>
+                <label class="register__group">
+                    <div class="register__text">パスワード</div>
+                    <input class="register__input" type="password" name="password" placeholder="例: coachtech1106" />
                     @error('password')
                     <div class="register__validation-alert">
                         {{ $message }}

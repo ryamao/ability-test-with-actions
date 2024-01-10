@@ -21,26 +21,22 @@ body {
     grid-auto-rows: 7.5rem;
 }
 
-.register__input-unit {
-    display: block;
-}
-
-.register__input-unit > * + * {
+.register__group > * + * {
     margin-top: 0.4rem;
 }
 
-.register__label-text {
+.register__text {
     font-size: 1.3rem;
 }
 
-.register__input input {
+.register__input {
     width: 100%;
     padding: 0.8rem 1.2rem;
     background-color: #f4f4f4;
     border: none;
 }
 
-.register__input input::placeholder {
+.register__input::placeholder {
     color: #beb1a6;
 }
 
