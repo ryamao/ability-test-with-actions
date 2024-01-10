@@ -1,4 +1,4 @@
-@props(['header' => true])
+@props(['hasHeader' => true])
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    @if ($header)
+    @if ($hasHeader)
     <header>
         <div class="header">
             <h1 class="header__title">FashionablyLate</h1>
