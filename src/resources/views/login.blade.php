@@ -25,37 +25,37 @@
     </header>
 
     <main>
-        <div class="register">
-            <h2 class="register__title">Login</h2>
+        <div class="login">
+            <h2 class="login__title">Login</h2>
 
-            <form class="register__form" action="/login" method="post" novalidate>
+            <form class="login__form" action="/login" method="post" novalidate>
                 @csrf
-                <div class="register__form-inner">
-                    <label class="register__label">
-                        <div class="register__label-text">メールアドレス</div>
-                        <div class="register__input">
+                <div class="login__form-inner">
+                    <label class="login__label">
+                        <div class="login__label-text">メールアドレス</div>
+                        <div class="login__input">
                             <input type="email" name="email" placeholder="例: test@example.com" />
                         </div>
                         @error('email')
-                        <div class="register__validation-alert">
+                        <div class="login__validation-alert">
                             {{ $message }}
                         </div>
                         @enderror
                     </label>
 
-                    <label class="register__label">
-                        <div class="register__label-text">パスワード</div>
-                        <div class="register__input">
+                    <label class="login__label">
+                        <div class="login__label-text">パスワード</div>
+                        <div class="login__input">
                             <input type="password" name="password" placeholder="例: coachtech1106" />
                         </div>
                         @error('password')
-                        <div class="register__validation-alert">
+                        <div class="login__validation-alert">
                             {{ $message }}
                         </div>
                         @enderror
                     </label>
 
-                    <div class="register__button">
+                    <div class="login__button">
                         <button type="submit">ログイン</button>
                     </div>
                 </div>

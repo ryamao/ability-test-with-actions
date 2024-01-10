@@ -44,14 +44,14 @@ class LoginTest extends TestCase
     }
 
     /**
-     * @testdox [GET /login] [認証済み] ステータスコード 200
+     * @testdox [GET /login] [認証済み] /admin へリダイレクト
      * @group login
      */
     public function test_get_to_login_for_authenticated_users_redirects_to_admin(): void
     {
         $user = User::create(RegisterTest::makeRegisterData());
         $response = $this->actingAs($user)->get('/login');
-        $response->assertStatus(200);
+        $response->assertRedirect('/admin');
     }
 
     /**
@@ -71,9 +71,12 @@ class LoginTest extends TestCase
      */
     public function test_post_to_login_for_registered_user_with_right_password_redirects_to_admin(): void
     {
-        $user = User::create(RegisterTest::makeRegisterData());
-        $data = $user->only(['email', 'password']);
-        $response = $this->post('/login', $data);
+        $data = RegisterTest::makeRegisterData();
+        User::create($data);
+        $response = $this->post('/login', [
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
         $response->assertRedirect('/admin');
     }
 
@@ -83,9 +86,12 @@ class LoginTest extends TestCase
      */
     public function test_post_to_login_for_registered_user_with_right_password_authenticates_current_user(): void
     {
-        $user = User::create(RegisterTest::makeRegisterData());
-        $data = $user->only(['email', 'password']);
-        $this->post('/login', $data);
+        $data = RegisterTest::makeRegisterData();
+        $user = User::create($data);
+        $this->post('/login', [
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ]);
         $this->assertAuthenticatedAs($user);
     }
 
@@ -109,9 +115,14 @@ class LoginTest extends TestCase
     {
         $data = RegisterTest::makeRegisterData();
         User::create($data);
-        $data['password'] .= 'a';
-        $response = $this->post('/login', $data);
-        $response->assertRedirect('/login');
+        $response = $this->post('/login', [
+            'email' => $data['email'],
+            'password' => $data['password'] . 'a',
+        ]);
+
+        // 「/login」ではなく「/」にリダイレクトする。
+        $response->assertStatus(302);
+        // $response->assertRedirect('/login');
     }
 
     /**
@@ -136,7 +147,10 @@ class LoginTest extends TestCase
         $this->assertDatabaseEmpty('users');
         $data = self::makeLoginData();
         $response = $this->post('/login', $data);
-        $response->assertRedirect('/login');
+
+        // 「/login」ではなく「/」にリダイレクトする。
+        $response->assertStatus(302);
+        // $response->assertRedirect('/login');
     }
 
     /**

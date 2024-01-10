@@ -31,6 +31,7 @@ body {
     background-color: #f0f0f0;
     border: 1px solid #d9c6b5;
     padding: 0.2rem 1.3rem;
+    cursor: pointer;
 }
 
 /* MAIN */
@@ -59,7 +60,7 @@ body {
     margin-bottom: 3.5rem;
 }
 
-.admin__export-form {
+.admin__export-layout {
     grid-column: 1;
     grid-row: 2;
 }
@@ -86,7 +87,7 @@ body {
 
 .admin__search-form {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) repeat(3, auto);
+    grid-template-columns: 4fr 1fr 2fr 2fr;
     column-gap: 2rem;
     height: 2.5rem;
 }
@@ -110,7 +111,7 @@ body {
 
 .admin__search-button {
     height: 100%;
-    padding: 0 0.5rem;
+    padding: 0 0.5rem 0 0;
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -151,22 +152,24 @@ body {
 .admin__search-form-control {
     height: 100%;
     color: #8b7969;
-    font-size: 1rem;
+    font-size: 0.9rem;
     appearance: none;
     position: relative;
     z-index: 100;
 }
 
 .admin__gender-select {
-    padding: 0 2rem 0 1rem;
+    padding: 0 2rem 0 0.8rem;
+    cursor: pointer;
 }
 
 .admin__category-select {
-    padding: 0 3rem 0 1rem;
+    padding: 0 2rem 0 0.8rem;
+    cursor: pointer;
 }
 
 .admin__date-input {
-    padding: 0 5rem 0 1rem;
+    padding: 0 5rem 0 0.8rem;
 }
 
 .admin__date-input::after {
@@ -183,6 +186,7 @@ body {
     height: 100%;
     opacity: 0;
     z-index: 200;
+    cursor: pointer;
 }
 
 .admin__date-input::-webkit-datetime-edit {
@@ -191,11 +195,12 @@ body {
 
 /* EXPORT FORM */
 
-.admin__export-button {
-    background-color: #eceae6;
-    border: none;
+.admin__export-link {
+    text-decoration: none;
     color: #8b7969;
     font-size: 1rem;
+    background-color: #eceae6;
+    border: none;
     padding: 0.3rem 0.8rem;
 }
 
@@ -209,11 +214,27 @@ body {
 
 .page-links {
     display: flex;
-    border: 1px solid #e0dfde;
-    border-radius: 0.25rem;
+    /* border: 1px solid #e0dfde; */
+    /* border-radius: 0.25rem; */
     text-align: center;
     font-size: 0.9rem;
     height: 1.5rem;
+}
+
+.page-links__left-item {
+    border-top: 1px solid #e0dfde;
+    border-bottom: 1px solid #e0dfde;
+    border-left: 1px solid #e0dfde;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.page-links__right-item {
+    border-top: 1px solid #e0dfde;
+    border-bottom: 1px solid #e0dfde;
+    border-right: 1px solid #e0dfde;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
 }
 
 .page-links > * + * {
@@ -222,6 +243,8 @@ body {
 
 .page-links__item {
     width: 1.5rem;
+    border-top: 1px solid #e0dfde;
+    border-bottom: 1px solid #e0dfde;
 }
 
 .page-links__link-item {
@@ -241,7 +264,12 @@ body {
 .page-links__current-item,
 .page-links__current-item:hover {
     background-color: #8b7969;
+    border: 1px solid #8b7969;
     color: #fff;
+}
+
+.page-links__current-item + .page-links__item {
+    border-left: none;
 }
 
 /* CONTACTS */
@@ -396,6 +424,7 @@ body {
     color: #fff;
     font-size: 0.9rem;
     padding: 0.3rem 1rem;
+    cursor: pointer;
 }
 
 /* RESET */
