@@ -16,7 +16,7 @@ class ContactControllerTest extends TestCase
 
     /**
      * @testdox [GET /] ステータスコード200
-     * @group index
+     * @group contact
      */
     public function test_http_get_index_returns_200(): void
     {
@@ -25,18 +25,18 @@ class ContactControllerTest extends TestCase
     }
 
     /**
-     * @testdox [GET /] view('index') を表示
-     * @group index
+     * @testdox [GET /] view('contact') を表示
+     * @group contact
      */
-    public function test_http_get_index_renders_index_view(): void
+    public function test_http_get_index_renders_contact_view(): void
     {
         $response = $this->get('/');
-        $response->assertViewIs('index');
+        $response->assertViewIs('contact');
     }
 
     /**
      * @testdox [GET /] 検証エラー無し
-     * @group index
+     * @group contact
      */
     public function test_http_get_index_is_valid(): void
     {

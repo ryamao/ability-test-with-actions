@@ -14,14 +14,14 @@ class ContactController extends Controller
     public function index(): View
     {
         $categories = Category::all();
-        return view('index', compact('categories'));
+        return view('contact', compact('categories'));
     }
 
     public function revise(ContactRequest $request): View
     {
         $params = $request->validated();
         $params['categories'] = Category::all();
-        return view('index', $params);
+        return view('contact', $params);
     }
 
     public function confirm(ContactRequest $request): View
