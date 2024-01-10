@@ -29,7 +29,7 @@ class ContactFactory extends Factory
             'tel' => fake()->phoneNumber(),
             'address' => fake()->address(),
             'building' => fake()->buildingNumber(),
-            'detail' => fake()->text(120),
+            'detail' => implode(PHP_EOL, fake()->sentences(2)),
             'created_at' => $createdAt,
             'updated_at' => $createdAt,
         ];

@@ -22,10 +22,6 @@ class AdminTest extends TestCase
         $view = $this->view('admin', [
             'categories' => Category::all(),
             'contacts' => Contact::paginate(10),
-            'keywordsString' => '',
-            'gender' => null,
-            'categoryId' => null,
-            'datetime' => null,
         ]);
 
         foreach (Category::all() as $category) {

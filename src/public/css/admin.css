@@ -59,7 +59,7 @@ body {
     margin-bottom: 3.5rem;
 }
 
-.admin__export-form {
+.admin__export-layout {
     grid-column: 1;
     grid-row: 2;
 }
@@ -191,11 +191,12 @@ body {
 
 /* EXPORT FORM */
 
-.admin__export-button {
-    background-color: #eceae6;
-    border: none;
+.admin__export-link {
+    text-decoration: none;
     color: #8b7969;
     font-size: 1rem;
+    background-color: #eceae6;
+    border: none;
     padding: 0.3rem 0.8rem;
 }
 

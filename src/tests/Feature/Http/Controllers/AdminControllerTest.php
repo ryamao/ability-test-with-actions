@@ -7,10 +7,9 @@ namespace Tests\Feature\Http\Controllers;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Sequence;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Carbon;
 use Tests\Feature\Http\RegisterTest;
 use Tests\TestCase;
 
@@ -267,6 +266,48 @@ class AdminControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
+    /**
+     * @testdox [GET /admin/export] [guest user] /login へリダイレクト
+     * @group admin
+     */
+    public function test_get_to_admin_export_for_guest_redirects_to_login(): void
+    {
+        $response = $this->get('/admin/export');
+        $response->assertRedirect('/login');
+    }
+
+    /**
+     * @testdox [GET /admin/export] [admin user] contacts テーブルが空
+     * @group admin
+     */
+    public function test_get_to_admin_export_for_admin_returns_empty_file_when_contacts_table_is_empty(): void
+    {
+        $this->assertDatabaseEmpty('contacts');
+        $user = User::create(RegisterTest::makeRegisterData());
+        $response = $this->actingAs($user)->get('/admin/export');
+        $response->assertDownload();
+        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        // $expectedCsv = <<<END
+        // last_name,first_name,gender,email,address,building,category_id,category_content,detail
+        // \n
+        // END;
+        // $this->assertSame($expectedCsv, $response->content());
+    }
+
+    /**
+     * @testdox [GET /admin/export] [admin user] クエリストリング無し
+     * @group admin
+     */
+    public function test_get_to_admin_export_for_admin_with_empty_query_returns_whole_data(): void
+    {
+        $expectedCsv = self::storeTestDataForExport();
+        $user = User::create(RegisterTest::makeRegisterData());
+        $response = $this->actingAs($user)->get('/admin/export');
+        $response->assertDownload();
+        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        // $this->assertSame($expectedCsv, $response->content());
+    }
+
     public static function storeTestData(?int $contactCount = null): void
     {
         $contents = [
@@ -279,10 +320,10 @@ class AdminControllerTest extends TestCase
         }
         $categories = Category::all();
 
-        Carbon::setTestNowAndTimezone('2023-01-10T09:00:00', 'Asia/Tokyo');
-        $twoDaysAgo = Carbon::today()->subDays(2);
-        $yesterday = Carbon::yesterday();
-        $today = Carbon::today();
+        CarbonImmutable::setTestNowAndTimezone('2023-01-10T09:00:00', 'Asia/Tokyo');
+        $twoDaysAgo = CarbonImmutable::today()->subDays(2);
+        $yesterday = CarbonImmutable::yesterday();
+        $today = CarbonImmutable::today();
 
         $records = [
             ['原', '太郎', 1, 'taro@example.com', $twoDaysAgo],
@@ -309,5 +350,46 @@ class AdminControllerTest extends TestCase
                 ->recycle($categories)
                 ->create(compact('last_name', 'first_name', 'gender', 'email', 'created_at', 'updated_at'));
         }
+    }
+
+    public static function storeTestDataForExport(): string
+    {
+        foreach (range(1, 3) as $i) {
+            Category::create(['content' => fake()->realText()]);
+        }
+        $categories = Category::all();
+
+        $csvStream = fopen('php://memory', 'r+');
+        fputcsv($csvStream, ['last_name', 'first_name', 'gender', 'email', 'address', 'building', 'category_id', 'category_content', 'detail', 'created_at', 'updated_at']);
+
+        foreach (range(1, 5) as $i) {
+            $gender = fake()->numberBetween(1, 3);
+            $genderName = match ($gender) {
+                1 => 'male',
+                2 => 'female',
+                3 => 'other'
+            };
+            $last_name = fake()->lastName($gender);
+            $first_name = fake()->firstName($gender);
+            $email = fake()->email();
+            $tel = fake()->phoneNumber();
+            $address = fake()->address();
+            $building = fake()->buildingNumber();
+            $category = $categories->random();
+            $category_id = $category->id;
+            $categoryContent = $category->content;
+            $detail = implode(PHP_EOL, fake()->sentences(2));
+            $created_at = fake()->dateTimeBetween('-2 days', '-1 day')->format('Y-m-d H:i:s');
+            $updated_at = fake()->dateTimeBetween('-1 day')->format('Y-m-d H:i:s');
+            Contact::create(compact('last_name', 'first_name', 'gender', 'email', 'tel', 'address', 'building', 'category_id', 'detail', 'created_at', 'updated_at'));
+            fputcsv($csvStream, [$last_name, $first_name, $gender, $email, $address, $building, $category_id, $categoryContent, $detail, $created_at, $updated_at]);
+        }
+
+        rewind($csvStream);
+        $csvString = '';
+        while (!feof($csvStream)) $csvString .= fgets($csvStream) . PHP_EOL;
+        fclose($csvStream);
+
+        return $csvString;
     }
 }

@@ -1,3 +1,15 @@
+@php
+$search = request()->query('search');
+$gender = request()->query('gender');
+$category = request()->query('category');
+$date = request()->query('date');
+$page = $contacts->currentPage();
+
+$queryString = http_build_query(compact('search', 'gender', 'category', 'date', 'page'));
+
+$categoryId = $category
+@endphp
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -34,36 +46,36 @@
                 <div class="admin__search-form-wrapper">
                     <form class="admin__search-form" action="/admin" method="get">
                         <div class="admin__search-input-unit">
-                            <input class="admin__search-input" type="search" name="search" placeholder="名前やメールアドレスを入力してください" value="{{ $keywordsString }}" />
+                            <input class="admin__search-input" type="search" name="search" placeholder="名前やメールアドレスを入力してください" value="{{ $search }}" />
                             <button class="admin__search-button" type="submit">
                                 <img src="{{ asset('img/glass_search_icon.svg') }}" />
                             </button>
                         </div>
                         <div class="admin__search-form-item admin__gender-select-unit">
                             <select class="admin__search-form-control admin__gender-select" name="gender">
-                                <option value="" @if(is_null($gender)) selected @endif>性別</option>
+                                <option value="" @if(empty($gender)) selected @endif>性別</option>
                                 <option value="">全て</option>
-                                <option value="1" @if($gender===1) selected @endif>男性</option>
-                                <option value="2" @if($gender===2) selected @endif>女性</option>
-                                <option value="3" @if($gender===3) selected @endif>その他</option>
+                                <option value="1" @if($gender==1) selected @endif>男性</option>
+                                <option value="2" @if($gender==2) selected @endif>女性</option>
+                                <option value="3" @if($gender==3) selected @endif>その他</option>
                             </select>
                         </div>
                         <div class="admin__search-form-item admin__category-select-unit">
                             <select class="admin__search-form-control admin__category-select" name="category">
                                 <option value="">お問い合わせの種類</option>
                                 @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" @if($category->id===$categoryId) selected @endif>{{ $category->content }}</option>
+                                <option value="{{ $category->id }}" @if($category->id==$categoryId) selected @endif>{{ $category->content }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="admin__search-form-item admin__date-input-unit">
-                            <input class="admin__search-form-control admin__date-input" type="date" name="date" value="{{ $datetime?->format('Y-m-d') }}" />
+                            <input class="admin__search-form-control admin__date-input" type="date" name="date" value="{{ $date }}" />
                         </div>
                     </form>
                 </div>
 
-                <div class="admin__export-form">
-                    <button class="admin__export-button">エクスポート</button>
+                <div class="admin__export-layout">
+                    <a class="admin__export-link" href="/admin/export?{{ $queryString }}">エクスポート</a>
                 </div>
 
                 <div class="admin__pagination-layout">
@@ -147,11 +159,11 @@
                         <form class="detail__delete-form" action="/admin/{{ $contact->id }}" method="post">
                             @csrf
                             @method('delete')
-                            <input type="hidden" name="search" value="{{ $keywordsString }}" />
+                            <input type="hidden" name="search" value="{{ $search }}" />
                             <input type="hidden" name="gender" value="{{ $gender }}" />
-                            <input type="hidden" name="category" value="{{ $categoryId }}" />
-                            <input type="hidden" name="date" value="{{ $datetime?->format('Y-m-d') }}" />
-                            <input type="hidden" name="page" value="{{ $contacts->currentPage() }}" />
+                            <input type="hidden" name="category" value="{{ $category }}" />
+                            <input type="hidden" name="date" value="{{ $date }}" />
+                            <input type="hidden" name="page" value="{{ $page }}" />
                             <button class="detail__delete-button" type="submit">削除</button>
                         </form>
                     </div>
