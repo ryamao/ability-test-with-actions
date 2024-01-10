@@ -1,0 +1,96 @@
+body {
+    font-family: "Inika", sans-serif;
+    color: #8b7969;
+    background-color: #f1ece7;
+}
+
+.header {
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    padding: 1rem 5rem;
+}
+
+.header__title {
+    grid-column: 2;
+    margin: 0;
+    font-weight: normal;
+}
+
+.header__nav {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.header__login-link {
+    text-decoration: none;
+    color: #d9c6b5;
+    background-color: #f0f0f0;
+    border: 1px solid #d9c6b5;
+    padding: 0.2rem 1.3rem;
+}
+
+.register {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.register__title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 2.7rem 0;
+}
+
+.register__form {
+    background-color: #fff;
+    border: 1px solid #c5b9b0;
+    border-radius: 0.5rem;
+}
+
+.register__form-inner {
+    width: 400px;
+    margin: 3.5rem auto;
+}
+
+.register__form-inner > * + * {
+    margin-top: 2.5rem;
+}
+
+.register__label {
+    display: block;
+}
+
+.register__label > * + * {
+    margin-top: 0.5rem;
+}
+
+.register__label-text {
+    font-size: 1.3rem;
+}
+
+.register__button {
+    display: flex;
+    justify-content: center;
+}
+
+.register__form input {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    background-color: #f4f4f4;
+    border: none;
+}
+
+.register__form input::placeholder {
+    color: #beb1a6;
+}
+
+.register__form button {
+    background-color: #8b7969;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
+}

@@ -17,16 +17,21 @@ class ContactFactory extends Factory
      */
     public function definition(): array
     {
+        $genderNames = ['male', 'female', 'other'];
+        $genderName = fake()->randomElement($genderNames);
+        $createdAt = fake()->dateTimeBetween(startDate: '-1 month');
         return [
-            'category_id' => Category::factory(),
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'gender' => fake()->numberBetween(1, 3),
+            'category_id' => fake()->randomElement($categories = Category::all())->id,
+            'first_name' => fake()->firstName($genderName),
+            'last_name' => fake()->lastName($genderName),
+            'gender' => array_search($genderName, $genderNames) + 1,
             'email' => fake()->email(),
             'tel' => fake()->phoneNumber(),
             'address' => fake()->address(),
             'building' => fake()->buildingNumber(),
             'detail' => fake()->text(120),
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
         ];
     }
 }
