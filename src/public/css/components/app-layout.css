@@ -33,10 +33,19 @@ select {
 .header__nav-link {
     text-decoration: none;
     font-family: inherit;
-    font-size: 1rem;
     color: #d9c6b5;
     background-color: #f0f0f0;
     border: 1px solid #d9c6b5;
+    min-width: 5rem;
+    text-align: center;
+}
+
+a.header__nav-link {
+    padding: 0.1rem 0.8rem;
+}
+
+button.header__nav-link {
+    font-size: 1rem;
     padding: 0.2rem 1.2rem;
 }
 
