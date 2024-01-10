@@ -1,3 +1,5 @@
+@props(['header' => true])
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -20,11 +22,13 @@
 </head>
 
 <body>
+    @if ($header)
     <header>
         <div class="header">
             <h1 class="header__title">FashionablyLate</h1>
         </div>
     </header>
+    @endif
 
     <main>
         <div class="content">
