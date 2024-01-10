@@ -161,7 +161,7 @@ $categoryId = $category
                             @method('delete')
                             <input type="hidden" name="search" value="{{ $search }}" />
                             <input type="hidden" name="gender" value="{{ $gender }}" />
-                            <input type="hidden" name="category" value="{{ $category }}" />
+                            <input type="hidden" name="category" value="{{ $categoryId }}" />
                             <input type="hidden" name="date" value="{{ $date }}" />
                             <input type="hidden" name="page" value="{{ $page }}" />
                             <button class="detail__delete-button" type="submit">削除</button>

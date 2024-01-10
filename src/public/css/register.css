@@ -4,6 +4,8 @@ body {
     background-color: #f1ece7;
 }
 
+/* HEADER */
+
 .header {
     background-color: #fff;
     display: grid;
@@ -32,6 +34,8 @@ body {
     padding: 0.2rem 1.3rem;
 }
 
+/* REGISTER FORM */
+
 .register {
     width: 600px;
     margin: 0 auto;
@@ -44,53 +48,59 @@ body {
     margin: 2.7rem 0;
 }
 
-.register__form {
+.register__container {
     background-color: #fff;
     border: 1px solid #c5b9b0;
     border-radius: 0.5rem;
+    padding: 3.5rem 0;
 }
 
-.register__form-inner {
+.register__layout {
     width: 400px;
-    margin: 3.5rem auto;
+    margin: 0 auto;
+    display: grid;
+    grid-auto-rows: 7.5rem;
 }
 
-.register__form-inner > * + * {
-    margin-top: 2.5rem;
-}
-
-.register__label {
+.register__input-unit {
     display: block;
 }
 
-.register__label > * + * {
-    margin-top: 0.5rem;
+.register__input-unit > * + * {
+    margin-top: 0.4rem;
 }
 
 .register__label-text {
     font-size: 1.3rem;
 }
 
-.register__button {
-    display: flex;
-    justify-content: center;
-}
-
-.register__form input {
+.register__input input {
     width: 100%;
     padding: 0.8rem 1.2rem;
     background-color: #f4f4f4;
     border: none;
 }
 
-.register__form input::placeholder {
+.register__input input::placeholder {
     color: #beb1a6;
 }
 
-.register__form button {
+.register__validation-alert {
+    font-size: 0.9rem;
+    color: #ba370d;
+}
+
+.register__button {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.register__button button {
     background-color: #8b7969;
     color: #fff;
     border: none;
     font-size: 1rem;
     padding: 0.5rem 2rem;
+    cursor: pointer;
 }
