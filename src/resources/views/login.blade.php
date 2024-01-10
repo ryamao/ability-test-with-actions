@@ -1,4 +1,51 @@
-<!DOCTYPE html>
+<x-app-layout>
+    <x-slot name="styles">
+        <link rel="stylesheet" href="{{ asset('css/login.css') }}" />
+    </x-slot>
+
+    <x-slot name="headerRight">
+        <nav>
+            <div class="header__nav">
+                <a class="header__nav-link" href="/register">register</a>
+            </div>
+        </nav>
+    </x-slot>
+
+    <x-slot name="subtitle">Login</x-slot>
+
+    <div class="login">
+        <form class="login__form" action="/login" method="post" novalidate>
+            @csrf
+            <div class="login__layout">
+                <label class="login__group">
+                    <div class="login__text">メールアドレス</div>
+                    <input class="login__input" type="email" name="email" placeholder="例: test@example.com" />
+                    @error('email')
+                    <div class="login__validation-alert">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </label>
+
+                <label class="login__group">
+                    <div class="login__text">パスワード</div>
+                    <input class="login__input" type="password" name="password" placeholder="例: coachtech1106" />
+                    @error('password')
+                    <div class="login__validation-alert">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </label>
+            </div>
+
+            <div class="login__button-layout">
+                <button class="login__submit-button" type="submit">ログイン</button>
+            </div>
+        </form>
+    </div>
+</x-app-layout>
+
+<!-- <!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -64,4 +111,4 @@
     </main>
 </body>
 
-</html>
+</html> -->

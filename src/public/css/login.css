@@ -1,100 +1,60 @@
 body {
-    font-family: "Inika", sans-serif;
-    color: #8b7969;
     background-color: #f1ece7;
 }
-
-/* HEADER */
-
-.header {
-    background-color: #fff;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    padding: 1rem 5rem;
-}
-
-.header__title {
-    grid-column: 2;
-    margin: 0;
-    font-weight: normal;
-}
-
-.header__nav {
-    grid-column: 3;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.header__login-link {
-    text-decoration: none;
-    color: #d9c6b5;
-    background-color: #f0f0f0;
-    border: 1px solid #d9c6b5;
-    padding: 0.2rem 1.3rem;
-}
-
-/* LOGIN FORM */
 
 .login {
     width: 600px;
     margin: 0 auto;
 }
 
-.login__title {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: normal;
-    margin: 2.7rem 0;
-}
-
 .login__form {
     background-color: #fff;
     border: 1px solid #c5b9b0;
     border-radius: 0.5rem;
+    padding: 4.5rem 0;
 }
 
-.login__form-inner {
-    width: 400px;
-    margin: 5rem auto 4.5rem auto;
+.login__layout {
+    width: 360px;
+    margin: 0 auto;
     display: grid;
-    grid-template-rows: 8rem 8rem auto;
+    grid-auto-rows: 7.5rem;
 }
 
-.login__label > * + * {
+.login__group > * + * {
     margin-top: 0.4rem;
 }
 
-.login__label-text {
+.login__text {
     font-size: 1.3rem;
 }
 
-.login__button {
-    display: flex;
-    justify-content: center;
-    margin-top: 1.5rem;
-}
-
-.login__form input {
+.login__input {
     width: 100%;
     padding: 0.8rem 1.2rem;
     background-color: #f4f4f4;
     border: none;
 }
 
-.login__form input::placeholder {
+.login__input::placeholder {
     color: #beb1a6;
-}
-
-.login__form button {
-    background-color: #8b7969;
-    color: #fff;
-    border: none;
-    font-size: 1rem;
-    padding: 0.5rem 2rem;
 }
 
 .login__validation-alert {
     font-size: 0.9rem;
     color: #ba370d;
+}
+
+.login__button-layout {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+}
+
+.login__submit-button {
+    background-color: #8b7969;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
 }

@@ -1,4 +1,4 @@
-@props(['header' => true])
+@props(['hasHeader' => true])
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inika&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/app-layout.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/components/app-layout.css') }}" />
 
     @isset($styles)
     {{ $styles }}
@@ -22,10 +22,14 @@
 </head>
 
 <body>
-    @if ($header)
+    @if ($hasHeader)
     <header>
         <div class="header">
             <h1 class="header__title">FashionablyLate</h1>
+
+            @isset($headerRight)
+            {{ $headerRight }}
+            @endisset
         </div>
     </header>
     @endif

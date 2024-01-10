@@ -1,54 +1,13 @@
 body {
-    font-family: "Inika", sans-serif;
-    color: #8b7969;
     background-color: #f1ece7;
 }
-
-/* HEADER */
-
-.header {
-    background-color: #fff;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    padding: 1rem 5rem;
-}
-
-.header__title {
-    grid-column: 2;
-    margin: 0;
-    font-weight: normal;
-}
-
-.header__nav {
-    grid-column: 3;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.header__login-link {
-    text-decoration: none;
-    color: #d9c6b5;
-    background-color: #f0f0f0;
-    border: 1px solid #d9c6b5;
-    padding: 0.2rem 1.3rem;
-}
-
-/* REGISTER FORM */
 
 .register {
     width: 600px;
     margin: 0 auto;
 }
 
-.register__title {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: normal;
-    margin: 2.7rem 0;
-}
-
-.register__container {
+.register__form {
     background-color: #fff;
     border: 1px solid #c5b9b0;
     border-radius: 0.5rem;
@@ -56,32 +15,28 @@ body {
 }
 
 .register__layout {
-    width: 400px;
+    width: 360px;
     margin: 0 auto;
     display: grid;
     grid-auto-rows: 7.5rem;
 }
 
-.register__input-unit {
-    display: block;
-}
-
-.register__input-unit > * + * {
+.register__group > * + * {
     margin-top: 0.4rem;
 }
 
-.register__label-text {
+.register__text {
     font-size: 1.3rem;
 }
 
-.register__input input {
+.register__input {
     width: 100%;
     padding: 0.8rem 1.2rem;
     background-color: #f4f4f4;
     border: none;
 }
 
-.register__input input::placeholder {
+.register__input::placeholder {
     color: #beb1a6;
 }
 

@@ -288,7 +288,7 @@ class AdminControllerTest extends TestCase
         $response->assertDownload();
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
         // $expectedCsv = <<<END
-        // last_name,first_name,gender,email,address,building,category_id,category_content,detail
+        // contact_id,last_name,first_name,gender,email,address,building,category_id,category_content,detail
         // \n
         // END;
         // $this->assertSame($expectedCsv, $response->content());
@@ -360,7 +360,7 @@ class AdminControllerTest extends TestCase
         $categories = Category::all();
 
         $csvStream = fopen('php://memory', 'r+');
-        fputcsv($csvStream, ['last_name', 'first_name', 'gender', 'email', 'address', 'building', 'category_id', 'category_content', 'detail', 'created_at', 'updated_at']);
+        fputcsv($csvStream, ['contact_id', 'last_name', 'first_name', 'gender', 'email', 'address', 'building', 'category_id', 'category_content', 'detail', 'created_at', 'updated_at']);
 
         foreach (range(1, 5) as $i) {
             $gender = fake()->numberBetween(1, 3);
@@ -381,8 +381,8 @@ class AdminControllerTest extends TestCase
             $detail = implode(PHP_EOL, fake()->sentences(2));
             $created_at = fake()->dateTimeBetween('-2 days', '-1 day')->format('Y-m-d H:i:s');
             $updated_at = fake()->dateTimeBetween('-1 day')->format('Y-m-d H:i:s');
-            Contact::create(compact('last_name', 'first_name', 'gender', 'email', 'tel', 'address', 'building', 'category_id', 'detail', 'created_at', 'updated_at'));
-            fputcsv($csvStream, [$last_name, $first_name, $gender, $email, $address, $building, $category_id, $categoryContent, $detail, $created_at, $updated_at]);
+            $contact = Contact::create(compact('last_name', 'first_name', 'gender', 'email', 'tel', 'address', 'building', 'category_id', 'detail', 'created_at', 'updated_at'));
+            fputcsv($csvStream, [$contact->id, $last_name, $first_name, $gender, $email, $address, $building, $category_id, $categoryContent, $detail, $created_at, $updated_at]);
         }
 
         rewind($csvStream);

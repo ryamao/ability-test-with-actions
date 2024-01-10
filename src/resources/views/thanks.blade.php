@@ -1,4 +1,4 @@
-<x-app-layout :header="false">
+<x-app-layout :hasHeader="false">
     <x-slot name="styles">
         <link rel="stylesheet" href="{{ asset('css/thanks.css') }}" />
     </x-slot>

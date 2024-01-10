@@ -46,6 +46,7 @@ class AdminController extends Controller
                 $output = fopen('php://output', 'w');
 
                 fputcsv($output, [
+                    'contact_id',
                     'last_name',
                     'first_name',
                     'gender',
@@ -61,6 +62,7 @@ class AdminController extends Controller
 
                 foreach ($contacts as $contact) {
                     fputcsv($output, [
+                        $contact->id,
                         $contact->last_name,
                         $contact->first_name,
                         $contact->gender,

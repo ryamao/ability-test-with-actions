@@ -1,0 +1,57 @@
+body {
+    font-family: "Inika", sans-serif;
+    color: #8b7969;
+}
+
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+.header {
+    background-color: #fff;
+    border-bottom: 1px solid #e0dfde;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 1.2rem 5rem;
+}
+
+.header__title {
+    grid-column: 2;
+    margin: 0;
+    font-weight: normal;
+}
+
+.header__nav {
+    grid-column: 3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header__nav-link {
+    text-decoration: none;
+    font-family: inherit;
+    color: #d9c6b5;
+    background-color: #f0f0f0;
+    border: 1px solid #d9c6b5;
+    min-width: 5rem;
+    text-align: center;
+}
+
+a.header__nav-link {
+    padding: 0.1rem 0.8rem;
+}
+
+button.header__nav-link {
+    font-size: 1rem;
+    padding: 0.2rem 1.2rem;
+}
+
+.content__title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 2.7rem 0;
+}
