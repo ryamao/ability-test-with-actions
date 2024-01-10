@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inika&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/app-layout.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/components/app-layout.css') }}" />
 
     @isset($styles)
     {{ $styles }}

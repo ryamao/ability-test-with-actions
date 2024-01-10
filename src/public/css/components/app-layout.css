@@ -11,10 +11,11 @@ select {
 
 .header {
     background-color: #fff;
+    border-bottom: 1px solid #e0dfde;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: 1rem 5rem;
+    padding: 1.2rem 5rem;
 }
 
 .header__title {
@@ -31,10 +32,12 @@ select {
 
 .header__nav-link {
     text-decoration: none;
+    font-family: inherit;
+    font-size: 1rem;
     color: #d9c6b5;
     background-color: #f0f0f0;
     border: 1px solid #d9c6b5;
-    padding: 0.2rem 1.3rem;
+    padding: 0.2rem 1.2rem;
 }
 
 .content__title {
