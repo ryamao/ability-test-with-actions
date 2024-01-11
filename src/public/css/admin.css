@@ -132,6 +132,8 @@
 
 .admin__date-input::-webkit-calendar-picker-indicator {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
@@ -141,6 +143,12 @@
 
 .admin__date-input::-webkit-datetime-edit {
     opacity: 0;
+}
+
+@-moz-document url-prefix() {
+    .admin__search-form-item::after {
+        display: none;
+    }
 }
 
 /* EXPORT FORM */
