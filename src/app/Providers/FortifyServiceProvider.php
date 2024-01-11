@@ -29,7 +29,7 @@ class FortifyServiceProvider extends ServiceProvider
             \App\Http\Requests\LoginRequest::class,
         );
 
-        // ログアウト後の遷移先を変える。
+        // ログアウト後の遷移先を /login に変える。
         $this->app->singleton(
             \Laravel\Fortify\Contracts\LogoutResponse::class,
             \App\Http\Responses\LogoutResponse::class,

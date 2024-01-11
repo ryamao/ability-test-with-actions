@@ -8,6 +8,20 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\Component;
 
+/**
+ * ページネーションのページリンクのビュークラス。
+ * 
+ * 5ページまでは数字をそのまま並べる。
+ * * [<|1|2|3|>]
+ * * [<|1|2|3|4|5|>]
+ * 
+ * 6ページ以上では5マスに収まるように適宜「…」で置き換える。
+ * * [<|1|2|3|.|7|>]
+ * * [<|1|.|4|.|7|>]
+ * * [<|1|.|5|6|7|>]
+ * 
+ * TODO 数字が2桁以上の表示の確認
+ */
 class PageLinks extends Component
 {
     public bool $hasLeftDots = false;

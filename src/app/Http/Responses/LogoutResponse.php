@@ -6,6 +6,9 @@ namespace App\Http\Responses;
 
 use Laravel\Fortify\Contracts\LogoutResponse as ContractsLogoutResponse;
 
+/**
+ * ログアウト後の遷移先を決めるクラス。
+ */
 class LogoutResponse implements ContractsLogoutResponse
 {
     /**
