@@ -19,7 +19,7 @@
             <div class="login__layout">
                 <label class="login__group">
                     <div class="login__text">メールアドレス</div>
-                    <input class="login__input" type="email" name="email" placeholder="例: test@example.com" />
+                    <input class="login__input" type="email" name="email" placeholder="例: test@example.com" value="{{ old('email') }}" />
                     @error('email')
                     <div class="login__validation-alert">
                         {{ $message }}

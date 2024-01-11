@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\Contact;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\Feature\Models\ContactTest;
 use Tests\TestCase;
 
 class ContactControllerTest extends TestCase
