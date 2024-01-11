@@ -1,11 +1,12 @@
 .contact {
-    max-width: 800px;
+    max-width: 832px;
     margin: 0 auto;
 }
 
 .contact__layout {
     display: grid;
     grid-template-columns: 1fr 2fr;
+    margin: 0 2rem;
 }
 
 .contact__group {
@@ -53,13 +54,11 @@
 /* GENDER */
 
 .contact__gender-radio {
+    max-width: 300px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     margin-left: 0.5rem;
-}
-
-.contact__gender-radio > * + * {
-    margin-left: 3rem;
 }
 
 .contact__gender-item {
@@ -103,7 +102,7 @@
 /* CATEGORY */
 
 .contact__category-select {
-    width: 50%;
+    max-width: 260px;
     background-color: #f4f4f4;
     position: relative;
     z-index: 0;
@@ -173,4 +172,60 @@
 
 .contact__validation-alert {
     font-size: 0.7rem;
+}
+
+/* RESPONSIVE */
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 0.5rem 0;
+    }
+
+    .content__title {
+        margin: 0.5rem 0;
+    }
+
+    .contact {
+        max-width: 500px;
+    }
+
+    .contact__layout {
+        margin: 0 1rem;
+    }
+
+    .contact__group {
+        grid-template-rows: auto minmax(0, 1fr);
+        min-height: 4.8rem;
+    }
+
+    .contact__group > * {
+        grid-column: span 2;
+    }
+
+    .contact__label {
+        padding: 0;
+    }
+
+    .contact__name-unit {
+        column-gap: 2rem;
+    }
+
+    .contact__gender-group {
+        min-height: 3.8rem;
+    }
+
+    .contact__tel-unit {
+        column-gap: 0.4rem;
+    }
+
+    .contact__validation-alert {
+        font-size: 0.6rem;
+    }
+
+    .contact__button-layout {
+        margin: 0.5rem 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
 }
