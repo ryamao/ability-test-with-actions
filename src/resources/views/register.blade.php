@@ -19,7 +19,7 @@
             <div class="register__layout">
                 <label class="register__group">
                     <div class="register__text">お名前</div>
-                    <input class="register__input" type="text" name="name" placeholder="例: 山田　太郎" />
+                    <input class="register__input" type="text" name="name" placeholder="例: 山田　太郎" value="{{ old('name') }}" />
                     @error('name')
                     <div class="register__validation-alert">
                         {{ $message }}
@@ -29,7 +29,7 @@
 
                 <label class="register__group">
                     <div class="register__text">メールアドレス</div>
-                    <input class="register__input" type="email" name="email" placeholder="例: test@example.com" />
+                    <input class="register__input" type="email" name="email" placeholder="例: test@example.com" value="{{ old('email') }}" />
                     @error('email')
                     <div class="register__validation-alert">
                         {{ $message }}
