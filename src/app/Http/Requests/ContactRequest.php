@@ -6,6 +6,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * お問い合わせフォームのバリデーションを行うクラス。
+ */
 class ContactRequest extends FormRequest
 {
     protected $redirect = '/';

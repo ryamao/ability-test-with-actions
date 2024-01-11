@@ -6,6 +6,10 @@ namespace App\Http\Requests;
 
 use Laravel\Fortify\Http\Requests\LoginRequest;
 
+/**
+ * ユーザ登録ページのバリデーションを行うクラス。
+ * App\Actions\Fortify\CreateNewUser で使われている。
+ */
 class RegisterRequest extends LoginRequest
 {
     protected $redirect = '/register';

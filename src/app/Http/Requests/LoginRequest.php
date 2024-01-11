@@ -6,6 +6,9 @@ namespace App\Http\Requests;
 
 use Laravel\Fortify\Http\Requests\LoginRequest as RequestsLoginRequest;
 
+/**
+ * ログインページのバリデーションを行うクラス。
+ */
 class LoginRequest extends RequestsLoginRequest
 {
     protected $redirect = '/login';
