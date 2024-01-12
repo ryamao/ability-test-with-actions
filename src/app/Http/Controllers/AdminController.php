@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Gender;
 use App\Models\Category;
 use App\Models\Contact;
 use Carbon\CarbonImmutable;
@@ -27,6 +28,7 @@ class AdminController extends Controller
         'last_name',
         'first_name',
         'gender',
+        'gender_name',
         'email',
         'address',
         'building',
@@ -91,18 +93,19 @@ class AdminController extends Controller
 
                 foreach ($contacts as $contact) {
                     fputcsv($output, [
-                        $contact->id,
-                        $contact->last_name,
-                        $contact->first_name,
-                        $contact->gender,
-                        $contact->email,
-                        $contact->address,
-                        $contact->building,
+                        $contact['id'],
+                        $contact['last_name'],
+                        $contact['first_name'],
+                        $contact['gender'],
+                        $contact->gender()->name(),
+                        $contact['email'],
+                        $contact['address'],
+                        $contact['building'],
                         $contact->category->id,
                         $contact->category->content,
-                        $contact->detail,
-                        $contact->created_at,
-                        $contact->updated_at,
+                        $contact['detail'],
+                        $contact['created_at'],
+                        $contact['updated_at'],
                     ]);
                 }
 
@@ -139,12 +142,11 @@ class AdminController extends Controller
         return substr($search, 0, self::MAX_SEARCH_STRING_LENGTH);
     }
 
-    /** クエリストリングから性別を正規化して取得する。 */
-    private function genderFromQueryString(Request $request): ?int
+    /** クエリストリングから性別を取得する。 */
+    private function genderFromQueryString(Request $request): ?Gender
     {
         if (!is_numeric($request->query('gender'))) return null;
-        $gender = (int) $request->query('gender');
-        return min(max($gender, 1), 3);
+        return Gender::tryFrom((int) $request->query('gender'));
     }
 
     /** クエリストリングからお問い合わせ種類を正規化して取得する。 */

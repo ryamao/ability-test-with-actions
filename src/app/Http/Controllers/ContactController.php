@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Gender;
 use App\Http\Requests\ContactRequest;
 use App\Models\Category;
 use App\Models\Contact;
@@ -49,11 +50,7 @@ class ContactController extends Controller
     public function confirm(ContactRequest $request): View
     {
         $easternOrderedName = request('last_name') . '　' . request('first_name');
-        $genderName = match ((int) request('gender')) {
-            1 => '男性',
-            2 => '女性',
-            3 => 'その他',
-        };
+        $genderName = Gender::from((int) request('gender'))->name();
         $phoneNumber = request('area_code') . request('city_code') . request('subscriber_code');
         $categoryContent = Category::find($request->input('category_id'))->content;
         return view('confirm', compact('easternOrderedName', 'phoneNumber', 'genderName', 'categoryContent'));

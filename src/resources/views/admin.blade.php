@@ -71,7 +71,7 @@
                         @foreach ($contacts as $contact)
                         <div class="admin__contact-data-item">
                             <div class="admin__contact-name">{{ $contact->easternOrderedName() }}</div>
-                            <div class="admin__contact-gender">{{ $contact->genderName() }}</div>
+                            <div class="admin__contact-gender">{{ $contact->gender()->name() }}</div>
                             <div class="admin__contact-email">{{ $contact->email }}</div>
                             <div class="admin__contact-category">{{ $contact->category->content }}</div>
                             <div class="admin__contact-detail">
@@ -103,7 +103,7 @@
                     </div>
                     <div class="detail__item">
                         <div class="detail__item-header">性別</div>
-                        <div class="detail__item-data">{{ $contact->genderName() }}</div>
+                        <div class="detail__item-data">{{ $contact->gender()->name() }}</div>
                     </div>
                     <div class="detail__item">
                         <div class="detail__item-header">メールアドレス</div>
