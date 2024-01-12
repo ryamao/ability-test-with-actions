@@ -31,18 +31,13 @@
                     <div class="contact__input-unit contact__gender-unit">
                         <div class="contact__input">
                             <div class="contact__gender-radio">
+                                @php $genderValue = old('gender', request('gender')); @endphp
+                                @foreach (App\Gender::cases() as $gender)
                                 <label class="contact__gender-item">
-                                    <input class="contact__gender" type="radio" name="gender" value="1" @if(old('gender', $gender ?? '1' )==='1' ) checked @endif />
-                                    男性
+                                    <input class="contact__gender" type="radio" name="gender" value="{{ $gender->value }}" @if($gender->value == $genderValue || $gender === App\Gender::Male) checked @endif />
+                                    {{ $gender->name() }}
                                 </label>
-                                <label class="contact__gender-item">
-                                    <input class="contact__gender" type="radio" name="gender" value="2" @if(old('gender', $gender ?? '' )==='2' ) checked @endif />
-                                    女性
-                                </label>
-                                <label class="contact__gender-item">
-                                    <input class="contact__gender" type="radio" name="gender" value="3" @if(old('gender', $gender ?? '' )==='3' ) checked @endif />
-                                    その他
-                                </label>
+                                @endforeach
                             </div>
                             @error('gender')
                             <div class="contact__validation-alert">{{ $message }}</div>
@@ -118,7 +113,7 @@
                                 <select class="contact__category" name="category_id">
                                     <option value="">選択してください</option>
                                     @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" @if(old('category_id', request('category_id'))==="{$category->id}" ) selected @endif>{{ $category->content }}</option>
+                                    <option value="{{ $category->id }}" @if($category->id == old('category_id', request('category_id'))) selected @endif>{{ $category->content }}</option>
                                     @endforeach
                                 </select>
                             </div>

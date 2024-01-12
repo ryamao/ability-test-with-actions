@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Gender;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\User;
@@ -289,7 +290,7 @@ class AdminControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
         $this->expectOutputString(
             implode(PHP_EOL, [
-                "contact_id,last_name,first_name,gender,email,address,building,category_id,category_content,detail,created_at,updated_at",
+                "contact_id,last_name,first_name,gender,gender_name,email,address,building,category_id,category_content,detail,created_at,updated_at",
                 "",
             ])
         );
@@ -363,7 +364,7 @@ class AdminControllerTest extends TestCase
         $categories = Category::all();
 
         $csvStream = fopen('php://memory', 'r+');
-        fputcsv($csvStream, ['contact_id', 'last_name', 'first_name', 'gender', 'email', 'address', 'building', 'category_id', 'category_content', 'detail', 'created_at', 'updated_at']);
+        fputcsv($csvStream, ['contact_id', 'last_name', 'first_name', 'gender', 'gender_name', 'email', 'address', 'building', 'category_id', 'category_content', 'detail', 'created_at', 'updated_at']);
 
         foreach (range(1, 5) as $i) {
             $gender = fake()->numberBetween(1, 3);
@@ -372,8 +373,8 @@ class AdminControllerTest extends TestCase
                 2 => 'female',
                 3 => 'other'
             };
-            $last_name = fake()->lastName($gender);
-            $first_name = fake()->firstName($gender);
+            $last_name = fake()->lastName($genderName);
+            $first_name = fake()->firstName($genderName);
             $email = fake()->email();
             $tel = fake()->phoneNumber();
             $address = fake()->address();
@@ -385,7 +386,7 @@ class AdminControllerTest extends TestCase
             $contact = Contact::create(compact('last_name', 'first_name', 'gender', 'email', 'tel', 'address', 'building', 'category_id', 'detail'));
             $createdAt = $contact->created_at->format('Y-m-d H:i:s');
             $updatedAt = $contact->updated_at->format('Y-m-d H:i:s');
-            fputcsv($csvStream, [$contact->id, $last_name, $first_name, $gender, $email, $address, $building, $category_id, $categoryContent, $detail, $createdAt, $updatedAt]);
+            fputcsv($csvStream, [$contact->id, $last_name, $first_name, $gender, Gender::from($gender)->name(), $email, $address, $building, $category_id, $categoryContent, $detail, $createdAt, $updatedAt]);
         }
 
         rewind($csvStream);

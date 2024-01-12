@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Gender;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,17 +30,13 @@ class Contact extends Model
     /** 名前を「姓」「名」の順番で文字列化する。 */
     public function easternOrderedName(): string
     {
-        return $this["last_name"] . '　' . $this["first_name"];
+        return $this['last_name'] . '　' . $this['first_name'];
     }
 
-    /** 性別を文字列で返す。 */
-    public function genderName(): string
+    /** 性別を返す。 */
+    public function gender(): Gender
     {
-        return match ($this->gender) {
-            1 => '男性',
-            2 => '女性',
-            3 => 'その他',
-        };
+        return Gender::from($this['gender']);
     }
 
     /** 関連する Category モデルを返す。 */
@@ -86,10 +83,10 @@ class Contact extends Model
     }
 
     /** 性別で検索する。 */
-    public function scopeSearchByGender(Builder $query, ?int $gender): void
+    public function scopeSearchByGender(Builder $query, ?Gender $gender): void
     {
         if (is_null($gender)) return;
-        $query->where('gender', $gender);
+        $query->where('gender', $gender->value);
     }
 
     /** お問い合わせの種類で検索する。 */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Models;
 
+use App\Gender;
 use App\Models\Category;
 use App\Models\Contact;
 use Carbon\CarbonImmutable;
@@ -74,18 +75,18 @@ class ContactTest extends TestCase
     }
 
     /**
-     * @testdox genderName: $gender => $genderName
+     * @testdox gender: $genderValue => $genderName
      * @group model
      * @testWith [1, "男性"]
      *           [2, "女性"]
      *           [3, "その他"]
      */
-    public function test_gender_name(int $gender, string $genderName): void
+    public function test_gender_name(int $genderValue, string $genderName): void
     {
         $data = $this->makeTestData();
-        $data['gender'] = $gender;
+        $data['gender'] = $genderValue;
         $contact = Contact::create($data);
-        $this->assertSame($genderName, $contact->genderName());
+        $this->assertSame($genderName, $contact->gender()->name());
     }
 
     /**
@@ -188,17 +189,17 @@ class ContactTest extends TestCase
     }
 
     /**
-     * @testdox searchByGender('$gender') => $matchCount件
+     * @testdox searchByGender(Gender::tryFrom($genderValue)) => $matchCount件
      * @group model
      * @testWith [1, 2]
      *           [2, 3]
      *           [3, 1]
      *           [null, 6]
      */
-    public function test_search_by_gender(?int $gender, int $matchCount): void
+    public function test_search_by_gender(?int $genderValue, int $matchCount): void
     {
         $this->storeTestDataForGender([1, 2, 3, 2, 2, 1]);
-        $contacts = Contact::searchByGender($gender)->get();
+        $contacts = Contact::searchByGender(is_null($genderValue) ? null : Gender::tryFrom($genderValue))->get();
         $this->assertCount($matchCount, $contacts);
     }
 
