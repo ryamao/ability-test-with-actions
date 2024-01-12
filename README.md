@@ -54,13 +54,13 @@ $ cp src/.env.example src/.env
 6. 暗号化キーを生成してください。
 
 ```
-$ docker compose exec php artisan key:generate
+$ docker compose exec php php artisan key:generate
 ```
 
 7. データベースの初期化を行ってください。
 
 ```
-$ docker compose exec php artisan migrate --seed
+$ docker compose exec php php artisan migrate --seed
 ```
 
 8. 環境構築後、以下の URL からアクセス可能になります。
@@ -106,13 +106,13 @@ mysql> exit
 4. テスト環境でマイグレーションを行ってください。
 
 ```
-$ docker compose exec php artisan migrate --env=testing
+$ docker compose exec php php artisan migrate --env=testing
 ```
 
 5. テスト環境構築後、PHPUnit が実行可能になります。
 
 ```
-$ docker compose exec php artisan test --testdox
+$ docker compose exec php php artisan test --testdox
 ```
 
 ## 使用技術
