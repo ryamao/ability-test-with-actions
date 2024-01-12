@@ -29,7 +29,7 @@ class Contact extends Model
     /** 名前を「姓」「名」の順番で文字列化する。 */
     public function easternOrderedName(): string
     {
-        return $this->last_name . '　' . $this->first_name;
+        return $this["last_name"] . '　' . $this["first_name"];
     }
 
     /** 性別を文字列で返す。 */
