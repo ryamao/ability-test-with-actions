@@ -1,5 +1,5 @@
 .confirm {
-    width: 780px;
+    max-width: 832px;
     margin: 0 auto;
 }
 
@@ -7,6 +7,7 @@
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     border: 1px solid #e0dfde;
+    margin: 0 2rem;
 }
 
 .confirm__layout > * + * {
@@ -34,21 +35,20 @@
 .confirm__button-group {
     margin: 2.5rem 0;
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    column-gap: 1rem;
+    grid-template-columns: 1fr auto 1fr;
     align-items: baseline;
 }
 
 .confirm__submit-button {
-    grid-column: 4;
+    grid-column: 2;
 }
 
 .confirm__edit-button {
-    grid-column: 5;
+    grid-column: 3;
+    margin-left: 2.4rem;
 }
 
 .confirm__button-group button {
-    width: 100%;
     border: none;
     font-size: 1rem;
     cursor: pointer;
@@ -57,11 +57,10 @@
 .confirm__submit-button button {
     background-color: #82756a;
     color: #fff;
-    padding: 0.3rem 0;
+    padding: 0.3rem 2rem;
 }
 
 .confirm__edit-button button {
-    width: 100%;
     background-color: transparent;
     color: #8b7969;
     text-decoration: underline;
@@ -69,4 +68,44 @@
 
 .display-none {
     display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 0.5rem 0;
+    }
+
+    .content__title {
+        margin: 1rem 0;
+    }
+
+    .confirm {
+        max-width: 600px;
+    }
+
+    .confirm__group {
+        grid-template-rows: auto auto;
+    }
+
+    .confirm__group > * {
+        grid-column: span 2;
+    }
+
+    .confirm__group-title {
+        padding: 0.1rem 0;
+        justify-content: center;
+    }
+
+    .confirm__group-text {
+        padding: 0.5rem 0;
+        margin: 0 auto;
+    }
+
+    .confirm__button-group {
+        margin: 1.5rem 0;
+    }
+
+    .confirm__edit-button {
+        margin-left: 25%;
+    }
 }
