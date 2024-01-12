@@ -287,11 +287,13 @@ class AdminControllerTest extends TestCase
         $response = $this->actingAs($user)->get('/admin/export');
         $response->assertDownload();
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-        // $expectedCsv = <<<END
-        // contact_id,last_name,first_name,gender,email,address,building,category_id,category_content,detail
-        // \n
-        // END;
-        // $this->assertSame($expectedCsv, $response->content());
+        $this->expectOutputString(
+            implode(PHP_EOL, [
+                "contact_id,last_name,first_name,gender,email,address,building,category_id,category_content,detail,created_at,updated_at",
+                "",
+            ])
+        );
+        $response->getCallback()();
     }
 
     /**
@@ -305,7 +307,8 @@ class AdminControllerTest extends TestCase
         $response = $this->actingAs($user)->get('/admin/export');
         $response->assertDownload();
         $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
-        // $this->assertSame($expectedCsv, $response->content());
+        $this->expectOutputString($expectedCsv);
+        $response->getCallback()();
     }
 
     public static function storeTestData(?int $contactCount = null): void
@@ -379,15 +382,15 @@ class AdminControllerTest extends TestCase
             $category_id = $category->id;
             $categoryContent = $category->content;
             $detail = implode(PHP_EOL, fake()->sentences(2));
-            $created_at = fake()->dateTimeBetween('-2 days', '-1 day')->format('Y-m-d H:i:s');
-            $updated_at = fake()->dateTimeBetween('-1 day')->format('Y-m-d H:i:s');
-            $contact = Contact::create(compact('last_name', 'first_name', 'gender', 'email', 'tel', 'address', 'building', 'category_id', 'detail', 'created_at', 'updated_at'));
-            fputcsv($csvStream, [$contact->id, $last_name, $first_name, $gender, $email, $address, $building, $category_id, $categoryContent, $detail, $created_at, $updated_at]);
+            $contact = Contact::create(compact('last_name', 'first_name', 'gender', 'email', 'tel', 'address', 'building', 'category_id', 'detail'));
+            $createdAt = $contact->created_at->format('Y-m-d H:i:s');
+            $updatedAt = $contact->updated_at->format('Y-m-d H:i:s');
+            fputcsv($csvStream, [$contact->id, $last_name, $first_name, $gender, $email, $address, $building, $category_id, $categoryContent, $detail, $createdAt, $updatedAt]);
         }
 
         rewind($csvStream);
         $csvString = '';
-        while (!feof($csvStream)) $csvString .= fgets($csvStream) . PHP_EOL;
+        while (!feof($csvStream)) $csvString .= fgets($csvStream);
         fclose($csvStream);
 
         return $csvString;
