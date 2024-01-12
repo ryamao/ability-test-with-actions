@@ -37,9 +37,8 @@ class ContactController extends Controller
      */
     public function revise(ContactRequest $request): View
     {
-        $params = $request->validated();
-        $params['categories'] = Category::all();
-        return view('contact', $params);
+        $categories = Category::all();
+        return view('contact', compact('categories'));
     }
 
     /**
@@ -49,17 +48,15 @@ class ContactController extends Controller
      */
     public function confirm(ContactRequest $request): View
     {
-        $validated = $request->validated();
-
-        $validated['gender_name'] = match ((int) $validated['gender']) {
+        $easternOrderedName = request('last_name') . '　' . request('first_name');
+        $genderName = match ((int) request('gender')) {
             1 => '男性',
             2 => '女性',
             3 => 'その他',
         };
-
-        $validated['category_content'] = Category::find($validated['category_id'])->content;
-
-        return view('confirm', $validated);
+        $phoneNumber = request('area_code') . request('city_code') . request('subscriber_code');
+        $categoryContent = Category::find($request->input('category_id'))->content;
+        return view('confirm', compact('easternOrderedName', 'phoneNumber', 'genderName', 'categoryContent'));
     }
 
     /**

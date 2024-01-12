@@ -12,13 +12,13 @@
                     <p class="contact__label contact__label--required">お名前</p>
                     <div class="contact__input-unit contact__name-unit">
                         <div class="contact__input">
-                            <input class="contact__last-name" type="text" name="last_name" placeholder="例: 山田" value="{{ old('last_name', $last_name ?? '') }}" />
+                            <input class="contact__last-name" type="text" name="last_name" placeholder="例: 山田" value="{{ old('last_name', request('last_name')) }}" />
                             @error('last_name')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="contact__input">
-                            <input class="contact__first-name" type="text" name="first_name" placeholder="例: 太郎" value="{{ old('first_name', $first_name ?? '') }}" />
+                            <input class="contact__first-name" type="text" name="first_name" placeholder="例: 太郎" value="{{ old('first_name', request('first_name')) }}" />
                             @error('first_name')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
@@ -55,7 +55,7 @@
                     <p class="contact__label contact__label--required">メールアドレス</p>
                     <div class="contact__input-unit">
                         <div class="contact__input">
-                            <input class="contact__email" type="email" name="email" placeholder="例: test@example.com" value="{{ old('email', $email ?? '') }}" />
+                            <input class="contact__email" type="email" name="email" placeholder="例: test@example.com" value="{{ old('email', request('email')) }}" />
                             @error('email')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
@@ -67,21 +67,21 @@
                     <p class="contact__label contact__label--required">電話番号</p>
                     <div class="contact__input-unit contact__tel-unit">
                         <div class="contact__input">
-                            <input class="contact__tel" type="tel" name="area_code" placeholder="080" value="{{ old('area_code', $area_code ?? '') }}" />
+                            <input class="contact__tel" type="tel" name="area_code" placeholder="080" value="{{ old('area_code', request('area_code')) }}" />
                             @error('area_code')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
                         </div>
                         <span class="contact__tel-hyphen">-</span>
                         <div class="contact__input">
-                            <input class="contact__tel" type="tel" name="city_code" placeholder="1234" value="{{ old('city_code', $city_code ?? '') }}" />
+                            <input class="contact__tel" type="tel" name="city_code" placeholder="1234" value="{{ old('city_code', request('city_code')) }}" />
                             @error('city_code')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
                         </div>
                         <span class="contact__tel-hyphen">-</span>
                         <div class="contact__input">
-                            <input class="contact__tel" type="tel" name="subscriber_code" placeholder="5678" value="{{ old('subscriber_code', $subscriber_code ?? '') }}" />
+                            <input class="contact__tel" type="tel" name="subscriber_code" placeholder="5678" value="{{ old('subscriber_code', request('subscriber_code')) }}" />
                             @error('subscriber_code')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
@@ -93,7 +93,7 @@
                     <p class="contact__label contact__label--required">住所</p>
                     <div class="contact__input-unit">
                         <div class="contact__input">
-                            <input class="contact__address" type="text" name="address" placeholder="例: 東京都渋谷区千駄ヶ谷1-2-3" value="{{ old('address', $address ?? '') }}" />
+                            <input class="contact__address" type="text" name="address" placeholder="例: 東京都渋谷区千駄ヶ谷1-2-3" value="{{ old('address', request('address')) }}" />
                             @error('address')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror
@@ -105,7 +105,7 @@
                     <p class="contact__label">建物名</p>
                     <div class="contact__input-unit">
                         <div class="contact__input">
-                            <input class="contact__building" type="text" name="building" placeholder="例: 千駄ヶ谷マンション101" value="{{ old('building', $building ?? '') }}" />
+                            <input class="contact__building" type="text" name="building" placeholder="例: 千駄ヶ谷マンション101" value="{{ old('building', request('building')) }}" />
                         </div>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
                                 <select class="contact__category" name="category_id">
                                     <option value="">選択してください</option>
                                     @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" @if(old('category_id', $category_id ?? '' )==="{$category->id}" ) selected @endif>{{ $category->content }}</option>
+                                    <option value="{{ $category->id }}" @if(old('category_id', request('category_id'))==="{$category->id}" ) selected @endif>{{ $category->content }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -133,7 +133,7 @@
                     <p class="contact__label contact__label--required">お問い合わせ内容</p>
                     <div class="contact__input-unit contact__detail-unit">
                         <div class="contact__input">
-                            <textarea class="contact__detail" name="detail" placeholder="お問い合わせ内容をご記載ください">{{ old('detail', $detail ?? '') }}</textarea>
+                            <textarea class="contact__detail" name="detail" placeholder="お問い合わせ内容をご記載ください">{{ old('detail', request('detail')) }}</textarea>
                             @error('detail')
                             <div class="contact__validation-alert">{{ $message }}</div>
                             @enderror

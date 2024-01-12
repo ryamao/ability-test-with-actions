@@ -9,66 +9,66 @@
             <div class="confirm__group">
                 <div class="confirm__group-title">お名前</div>
                 <div class="confirm__group-text">
-                    {{ $last_name }}　{{ $first_name }}
+                    {{ $easternOrderedName }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">性別</div>
                 <div class="confirm__group-text">
-                    {{ $gender_name }}
+                    {{ $genderName }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">メールアドレス</div>
                 <div class="confirm__group-text">
-                    {{ $email }}
+                    {{ request('email') }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">電話番号</div>
                 <div class="confirm__group-text">
-                    {{ $area_code }}{{ $city_code }}{{ $subscriber_code }}
+                    {{ $phoneNumber }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">住所</div>
                 <div class="confirm__group-text">
-                    {{ $address }}
+                    {{ request('address') }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">建物名</div>
                 <div class="confirm__group-text">
-                    {{ $building }}
+                    {{ request('building') }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">お問い合わせの種類</div>
                 <div class="confirm__group-text">
-                    {{ $category_content }}
+                    {{ $categoryContent }}
                 </div>
             </div>
             <div class="confirm__group">
                 <div class="confirm__group-title">お問い合わせ内容</div>
                 <div class="confirm__group-text">
-                    {!! nl2br(e($detail)) !!}
+                    {!! nl2br(e(request('detail'))) !!}
                 </div>
             </div>
         </div>
 
         <form class="confirm__form" method="post">
             @csrf
-            <input type="hidden" name="last_name" value="{{ $last_name }}" />
-            <input type="hidden" name="first_name" value="{{ $first_name }}" />
-            <input type="hidden" name="gender" value="{{ $gender }}" />
-            <input type="hidden" name="email" value="{{ $email }}" />
-            <input type="hidden" name="area_code" value="{{ $area_code }}" />
-            <input type="hidden" name="city_code" value="{{ $city_code }}" />
-            <input type="hidden" name="subscriber_code" value="{{ $subscriber_code }}" />
-            <input type="hidden" name="address" value="{{ $address }}" />
-            <input type="hidden" name="building" value="{{ $building }}" />
-            <input type="hidden" name="category_id" value="{{ $category_id }}" />
-            <textarea class="display-none" name="detail">{{ $detail }}</textarea>
+            <input type="hidden" name="last_name" value="{{ request('last_name') }}" />
+            <input type="hidden" name="first_name" value="{{ request('first_name') }}" />
+            <input type="hidden" name="gender" value="{{ request('gender') }}" />
+            <input type="hidden" name="email" value="{{ request('email') }}" />
+            <input type="hidden" name="area_code" value="{{ request('area_code') }}" />
+            <input type="hidden" name="city_code" value="{{ request('city_code') }}" />
+            <input type="hidden" name="subscriber_code" value="{{ request('subscriber_code') }}" />
+            <input type="hidden" name="address" value="{{ request('address') }}" />
+            <input type="hidden" name="building" value="{{ request('building') }}" />
+            <input type="hidden" name="category_id" value="{{ request('category_id') }}" />
+            <textarea class="display-none" name="detail">{{ request('detail') }}</textarea>
             <div class="confirm__button-group">
                 <div class="confirm__submit-button">
                     <button type="submit" formaction="/contact">送信</button>
