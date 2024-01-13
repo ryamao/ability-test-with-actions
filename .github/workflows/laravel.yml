@@ -28,7 +28,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: actions_db
-          MYSQL_USER: actions_user
+          MYSQL_USERNAME: actions_user
           MYSQL_PASSWORD: actions_pass
 
     env:
@@ -36,7 +36,7 @@ jobs:
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_DATABASE: actions_db
-      DB_USER: actions_user
+      DB_USERNAME: actions_user
       DB_PASSWORD: actions_pass
 
     steps:
@@ -53,5 +53,5 @@ jobs:
       - name: Migration
         run: php artisan migrate
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: vendor/bin/phpunit --testdox
+        run: php artisan test --testdox
 
