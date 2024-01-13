@@ -28,7 +28,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: actions_db
-          MYSQL_USERNAME: actions_user
+          MYSQL_USER: actions_user
           MYSQL_PASSWORD: actions_pass
 
     env:
