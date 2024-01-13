@@ -1,8 +1,6 @@
 name: Laravel
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -44,14 +42,25 @@ jobs:
         with:
           php-version: '8.3'
       - uses: actions/checkout@v3
+
+      - name: Cache ./src/vendor directory
+        id: cache-vendor
+        uses: actions/cache@v3
+        with:
+          path: ./src/vendor
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-vendor-
+
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
       - name: Install Dependencies
+        if: steps.cache-vendor.outputs.cache-hit != 'true'
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Generate key
         run: php artisan key:generate
       - name: Migration
         run: php artisan migrate
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: php artisan test --testdox
+        run: php artisan test
 
