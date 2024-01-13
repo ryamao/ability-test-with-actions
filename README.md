@@ -1,5 +1,7 @@
 # お問い合わせフォーム
 
+![main branch parameter](https://github.com/ryamao/ability-test-with-actions/actions/workflows/laravel.yml/badge.svg?branch=main)
+
 ## 環境構築
 
 ### はじめに
