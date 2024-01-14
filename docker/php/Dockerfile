@@ -13,6 +13,9 @@ RUN apt-get update; \
     mv composer.phar /usr/local/bin/composer; \
     composer self-update
 
+RUN pecl install xdebug-3.3.1; \
+    docker-php-ext-enable xdebug
+
 COPY php.ini /usr/local/etc/php/
 
 EXPOSE 9000
