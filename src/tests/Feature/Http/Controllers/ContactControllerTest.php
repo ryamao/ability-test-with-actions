@@ -45,6 +45,66 @@ class ContactControllerTest extends TestCase
     }
 
     /**
+     * @testdox [GET /]->[POST /confirm](パラメータ無し)->[GET /]: エラーメッセージを表示する
+     * @group contact
+     */
+    public function test_get_to_index_and_post_to_confirm_with_no_parameter(): void
+    {
+        $response = $this
+            ->from('/')
+            ->followingRedirects()
+            ->post('/confirm');
+
+        $response->assertSeeText('姓を入力してください');
+        $response->assertSeeText('名を入力してください');
+        $response->assertSeeText('性別を選択してください');
+        $response->assertSeeText('メールアドレスを入力してください');
+        $response->assertSeeText('電話番号を入力してください');
+        $response->assertSeeText('電話番号を入力してください');
+        $response->assertSeeText('電話番号を入力してください');
+        $response->assertSeeText('住所を入力してください');
+        $response->assertSeeText('お問い合わせの種類を選択してください');
+        $response->assertSeeText('お問い合わせ内容を入力してください');
+    }
+
+    /**
+     * @testdox [GET /]->[POST /confirm](全パラメータ有り)->[GET /]: エラーメッセージを表示しない
+     * @group contact
+     */
+    public function test_get_to_index_and_post_to_confirm_with_required_parameters(): void
+    {
+        $category = Category::create(['content' => 'お問い合わせの種類1']);
+
+        $response = $this
+            ->from('/')
+            ->followingRedirects()
+            ->post('/confirm', [
+                'last_name' => '山田',
+                'first_name' => '太郎',
+                'gender' => '1',
+                'email' => 'test@example.com',
+                'area_code' => '080',
+                'city_code' => '1234',
+                'subscriber_code' => '5678',
+                'address' => '東京都渋谷区千駄ヶ谷1-2-3',
+                'building' => '千駄ヶ谷マンション101',
+                'category_id' => (string) $category->id,
+                'detail' => "お問い合わせ内容がここには入ります。\nお問い合わせ内容がここには入ります。",
+            ]);
+
+        $response->assertDontSeeText('姓を入力してください');
+        $response->assertDontSeeText('名を入力してください');
+        $response->assertDontSeeText('性別を選択してください');
+        $response->assertDontSeeText('メールアドレスを入力してください');
+        $response->assertDontSeeText('電話番号を入力してください');
+        $response->assertDontSeeText('電話番号を入力してください');
+        $response->assertDontSeeText('電話番号を入力してください');
+        $response->assertDontSeeText('住所を入力してください');
+        $response->assertDontSeeText('お問い合わせの種類を選択してください');
+        $response->assertDontSeeText('お問い合わせ内容を入力してください');
+    }
+
+    /**
      * @testdox [GET /confirm] ステータスコード405
      * @group confirm
      */
