@@ -45,6 +45,29 @@ class ContactControllerTest extends TestCase
     }
 
     /**
+     * @testdox [GET /]->[POST /confirm](パラメータ無し)->[GET /]: エラーメッセージを表示する
+     * @group contact
+     */
+    public function test_get_to_index_and_post_to_confirm_with_no_parameter(): void
+    {
+        $response = $this
+            ->from('/')
+            ->followingRedirects()
+            ->post('/confirm');
+
+        $response->assertSeeText('姓を入力してください');
+        $response->assertSeeText('名を入力してください');
+        $response->assertSeeText('性別を選択してください');
+        $response->assertSeeText('メールアドレスを入力してください');
+        $response->assertSeeText('電話番号を入力してください');
+        $response->assertSeeText('電話番号を入力してください');
+        $response->assertSeeText('電話番号を入力してください');
+        $response->assertSeeText('住所を入力してください');
+        $response->assertSeeText('お問い合わせの種類を選択してください');
+        $response->assertSeeText('お問い合わせ内容を入力してください');
+    }
+
+    /**
      * @testdox [GET /confirm] ステータスコード405
      * @group confirm
      */
